@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="bn">
 <head>
-  <title>Website Embed</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Jagobd | Playlist</title>
   <style>
     body, html {
       margin: 0;
@@ -9,14 +11,18 @@
       height: 100%;
       overflow: hidden;
     }
+
     iframe {
       width: 100%;
-      height: 100%;
+      height: 100vh; /* Full viewport height */
       border: none;
     }
+
+    /* Optional: Add custom styles for better appearance */
+    /* You can add any specific styles here if needed */
   </style>
 </head>
 <body>
-  <iframe src="jago.html"></iframe>
+  <iframe src="jago.html" loading="lazy"></iframe>
 </body>
 </html>
