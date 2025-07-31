@@ -1,154 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JAGOBD</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-  <style>
-    .player-container { display: none; }
-    .search-bar { display: none; }
-  </style>
+  <link rel="shortcut icon" href="https://www.easykoro.com/inventories/fit-in/600x800/803377601954796.png"/>
+<script>
+    (function(){try{if(window.top.location.hostname!==self.location.hostname){window.top.location.href='https://www.google.com'}else{window.parent.postMessage('HANDSHAKE_SUCCESS','*')}}catch(e){window.top.location.href='https://www.google.com'}})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Great Family TV</title>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #000; }
+        iframe { width: 100%; height: 100%; border: none; background-color: transparent; }
+    </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body>
 
-  <!-- Header -->
-  <div class="flex items-center justify-between p-4 bg-gray-800">
-    <i class="fas fa-arrow-left text-xl back-btn hidden cursor-pointer" onclick="goBack()"></i>
-    <h1 class="text-xl font-bold title">BANGLADESH CHANNELS</h1>
-    <div class="flex items-center gap-3">
-      <i class="fas fa-search text-xl cursor-pointer" onclick="toggleSearch()"></i>
-    </div>
-  </div>
+    <iframe id="content-frame" src="main.html"></iframe>
 
-  <!-- Search Bar -->
-  <div class="p-4 search-bar">
-    <input type="text" id="searchInput" placeholder="Search channels..." oninput="filterChannels()" class="w-full p-2 rounded bg-gray-800 text-white border border-gray-600" />
-  </div>
+    <script>
+        (function() {
+            const punishmentHTML = `<style>@keyframes p{0%{background-color:#1a0000;box-shadow:0 0 10px #f00}50%{background-color:#600;box-shadow:0 0 40px #f44}100%{background-color:#1a0000;box-shadow:0 0 10px #f00}}@keyframes s{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-10px)}20%,40%,60%,80%{transform:translateX(10px)}}@keyframes g{from{text-shadow:0 0 10px #fff,0 0 20px #fff,0 0 30px #f00}to{text-shadow:0 0 20px #fff,0 0 30px #f44,0 0 40px #f44}}.tb{font-family:'Courier New',monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;animation:p 4s infinite ease-in-out;color:#fff;text-align:center;padding:15px}.c{border:3px solid #f44;padding:40px;background:rgba(0,0,0,0.7);border-radius:15px;max-width:90%}.sk{font-size:10vw;animation:s .8s cubic-bezier(.36,.07,.19,.97) both infinite}.pm{font-size:clamp(16px, 2.5vw, 30px);animation:g 1.5s infinite alternate;line-height:1.5;margin-top:20px}</style><div class="tb"><div class="c"><div class="sk">💀</div><div class="pm">চুরি করে ভাবছো তুমি হয়ে গেছো বীর?<br>আমার কোডের ফাঁদে পড়ে, মাথা হলো স্থির!<br>পরের জিনিস চুরি করা লজ্জারই কাজ,<br>পালিয়ে বাঁচো, চোর মহাশয়, তোমার গেল লাজ।</div></div></div><audio id="ps" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWWimGEsAABMAC0AAGwEAAAIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIi-A/wA5/9/z/AP/1D//w+f/w+P/w9v/w8v/w7//w7P/w6v/w5//w5P/w4f/w3//w3P/w2v/w1f/w0//wz//wy//wyP/wxv/wv//wuf/wsv/wsP/wrv/wqv/wqP/wpf/woP/wnv/wm//wmP/wlv/wkv/wkf/wh//whf/wg//wf//wfP/we//wev/wcf/wcP/wbv/wa//wZ//wZf/wY//wYf/wX//wWv/wV//wVf/wU//wUf/wT//wTP/wS//wSP/wR//wQ//wP//wO//wOf/wNv/wNP/wMv/wMf/wL//wLf/wK//wKf/wJ//wI//wHv/wHf/wG//wGP/wF//wE//8D//73//7f//6//+q//+qP/+p//+o//+nv/+nP/+mv/+lf/+k//+j//+if/+h//+fv/+fv/+e//+d//+c//+b//+Z//+X//+W//+U//+T//+R//+Q//+P//+O//+N//+M//+K//+J//+I//+H//+F//+E//+D//+B///+//7//vL/+7v/+6f/+5//+4v/+3//+3f/+2v/+1f/+0//+z//+yf/+x//+wf/+v//+u//+t//+s//+q//+p//+o//+n//+m//+l//+k//+j//+if/+h//+f//+e//+d//+c//+b//+Z//+Y//+X//+W//+U//+T//+R//+Q//+P//+O//+N//+M//+L//+K//+J//+I//+H//+G//+F//+E//+C//+A//+/wAD/8fAA//DwAP/v8AD/7fAA/+zwAP/r8AD/6vAA/+nwAP/o8AD/5/AA/+XwAP/k8AD/4/AA/+DwAP/f8AD/3vAA/9zwAP/b8AD/2vAA/9jwAP/Y8AD/1fAA/9PwAP/T8AD/0vAA/8/wAP/O8AD/zPAA/8rwAP/K8AD/yPAA/8fwAP/G8AD/xfAA/8TwAP/E8AD/w/AA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8//gA5h+T//3n8v//sP3//2z9///s/H//9Px///j8v//x/L//+fy///v8f//7fH///Dx////8f///PH///Lx///B8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8//8AOYf4wAAAAAAAAAAAAAA//tAwBgoYVpY5kAAAASAAAADAAADABYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY-A/wAAYAAAwAAYAHQCAAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV-A/gEAAADAAAAAAB0AgAAAANrAAB/aQAAf38AAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4a//8AOYf8gAAAIgAAAAIAAwABAAAAEAAA//gA5h+Z//5x/L//+vy///r8v//6/L//+vx///z8f/98fH//PHx//vB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8sHh//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8+PH/+fDx//rw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/8sPH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/8-fL//fnx//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v5-A/wAAwAAGAB0AgAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV-A/gttempt>
+                const audio = document.getElementById('ps');
+                if (audio) {
+                    audio.play().catch(e => {});
+                }
+            };
 
-  <!-- ভিডিও প্লেয়ার অংশ -->
-<div id="playerPage" class="player-container">
-  <video id="videoPlayer" controls class="w-full h-[220px] bg-black" autoplay></video>
-  <h2 id="videoTitle" class="text-xl font-semibold mt-2 p-4"></h2>
-</div>
+            const doomTimer = setTimeout(trigger, 3000);
 
-  <!-- Channel Grid -->
-  <div id="channelGrid" class="p-4 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
-    <!-- Example channel item -->
-  </div>
-
-  <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <script>
-    const channels = [
-      { name: "T Sports", thumb: "https://edge01.iptv.digijadoo.net/static/t_sports.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/t_sports.m3u8" },
-      { name: "Gazi TV", thumb: "https://edge01.iptv.digijadoo.net/static/gazi_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/gazi_tv_hd.m3u8" },
-      { name: "Zee Bangla", thumb: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrExtByJQOOX34ZE-U5Fh03yR9pu2Z7Xpxd5UEDkgql0e3-tGsxmmxgg&s=10", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/zee_bangla.m3u8" },
-{ name: "Zee Cenema", thumb: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-iJMZyt-NwI8suthoYDIV1ig5lKoVJhXw2JP5gCON_QnFULtqkyLEuyo&s=10", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/zee_cinema_hd.m3u8" },
-{ name: "Zee TV", thumb: "https://edge01.iptv.digijadoo.net/static/zee_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/zee_tv.m3u8" },
-{ name: "Colors Hd", thumb: "https://edge01.iptv.digijadoo.net/static/colors_hd.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/colors_hd.m3u8" },
-{ name: "SATV", thumb: "https://edge01.iptv.digijadoo.net/static/sa_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/sa_tv.m3u8" },
-{ name: "RTV", thumb: "https://edge01.iptv.digijadoo.net/static/rtv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/rtv.m3u8" },
-{ name: "Somoy News", thumb: "https://edge01.iptv.digijadoo.net/static/somoy_news.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/somoy_news.m3u8" },
-{ name: "Arirang", thumb: "https://edge01.iptv.digijadoo.net/static/arirang.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/arirang.m3u8" },
-{ name: "My Tv", thumb: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqlr6wiKoQnLBtqz7muGnQ6ipFuu_csiXn12UBgiA_An_Zt9OM6MXpHW0&s=10", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/my_tv.m3u8" },
-{ name: "Asian Tv", thumb: "https://edge01.iptv.digijadoo.net/static/asian_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/asian_tv.m3u8" },
-{ name: "BBC Lifestyle", thumb: "https://edge01.iptv.digijadoo.net/static/bbc_lifestyle.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/bbc_lifestyle.m3u8" },
-{ name: "BBC World", thumb: "https://edge01.iptv.digijadoo.net/static/bbc_world.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/" },
-{ name: "BTV World", thumb: "https://edge01.iptv.digijadoo.net/static/btv_world.png", src: "http://103.175.242.10:8080/hls/btv/index.m3u8" },
-{ name: "Bangla TV", thumb: "https://edge01.iptv.digijadoo.net/static/bangla_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/bangla_tv.m3u8" },
-{ name: "Bangla Vision", thumb: "https://edge01.iptv.digijadoo.net/static/bangla_vision.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/bangla_vision.m3u8" },
-{ name: "Bijoy TV", thumb: "https://edge01.iptv.digijadoo.net/static/bijoy_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/bijoy_tv.m3u8" },
-{ name: "Boishakhi TV", thumb: "https://edge01.iptv.digijadoo.net/static/boishakhi_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/boishakhi_tv.m3u8" },
-{ name: "Channel 24", thumb: "https://edge01.iptv.digijadoo.net/static/channel_24.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/channel_24.m3u8" },
-{ name: "Desh TV", thumb: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4CfF8DO73YRrwEy8BaKuc769Th5lZI9d5NVCVHoxEPWnGiqHtl35S2PC8&s=10", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/desh_tv.m3u8" },
-      { name: "Ekkator TV", thumb: "https://edge01.iptv.digijadoo.net/static/ekattor_tv.png", src: "http://ix.netlify.app/.netlify/functions/jadoo/ekattor_tv.m3u8" },
-      { name: "Channel i", thumb: "https://edge01.iptv.digijadoo.net/static/channel_i.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/channel_i.m3u8" },
-      { name: "Dbc News", thumb: "https://edge01.iptv.digijadoo.net/static/dbc_news.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/dbc_news.m3u8" },
-      { name: "Ekusey TV", thumb: "https://edge01.iptv.digijadoo.net/static/ekushey_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/ekushey_tv.m3u8" },
-      { name: "Gaan Bangla", thumb: "https://edge01.iptv.digijadoo.net/static/gaan_bangla.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/gaan_bangla.m3u8" },
-      { name: "Jamuna TV", thumb: "https://edge01.iptv.digijadoo.net/static/jamuna_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/jamuna_tv.m3u8" },
-      { name: "Independent TV", thumb: "https://edge01.iptv.digijadoo.net/static/independent_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/independent_tv.m3u8" },
-      { name: "Channel 9", thumb: "https://edge01.iptv.digijadoo.net/static/channel_9.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/channel_9.m3u8" },
-      { name: "Deepto TV", thumb: "https://edge01.iptv.digijadoo.net/static/deepto_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/deepto_tv.m3u8" },
-      { name: "Masragga TV", thumb: "https://edge01.iptv.digijadoo.net/static/maasranga.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/maasranga.m3u8" },
-      { name: "NTV", thumb: "https://edge01.iptv.digijadoo.net/static/ntv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/ntv.m3u8" },
-      { name: "Duranto TV", thumb: "https://edge01.iptv.digijadoo.net/static/duronto_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/duronto_tv.m3u8" },
-      { name: "Nagorik TV", thumb: "https://edge01.iptv.digijadoo.net/static/nagorik_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/nagorik_tv.m3u8" },
-      { name: "Nexus TV", thumb: "https://edge01.iptv.digijadoo.net/static/nexus_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/nexus_tv.m3u8" },
-      { name: "News 24", thumb: "https://edge01.iptv.digijadoo.net/static/news_24_hd.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/news_24_hd.m3u8" },
-      { name: "ATN Bangla", thumb: "https://edge01.iptv.digijadoo.net/static/atn_bangla.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/atn_bangla.m3u8" },
-      { name: "Atn News", thumb: "https://edge01.iptv.digijadoo.net/static/atn_news.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/atn_news.m3u8" },
-      { name: "Aljezzera English", thumb: "https://edge01.iptv.digijadoo.net/static/al_jazeera.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/al_jazeera.m3u8" },
-      { name: "Ananda TV", thumb: "https://edge01.iptv.digijadoo.net/static/ananda_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/ananda_tv.m3u8" },
-      { name: "Quran TV", thumb: "https://edge01.iptv.digijadoo.net/static/quran_tv.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/quran_tv.m3u8" },
-      { name: "Cnn", thumb: "https://edge01.iptv.digijadoo.net/static/cnn.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/cnn.m3u8" },
-      { name: "Cebibeis Asia", thumb: "https://edge01.iptv.digijadoo.net/static/cbeebies_asia.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/cbeebies_asia.m3u8" },
-      { name: "Rt English", thumb: "https://edge01.iptv.digijadoo.net/static/rt_english.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/rt_english.m3u8" },
-      { name: "NHK World", thumb: "https://edge01.iptv.digijadoo.net/static/nhk_world.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/nhk_world.m3u8" },
-      { name: "Maccau", thumb: "https://edge01.iptv.digijadoo.net/static/macau_lotus.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/macau_lotus.m3u8" },
-      { name: "DW", thumb: "https://edge01.iptv.digijadoo.net/static/dw.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/dw.m3u8" },
-      { name: "Cgtn News", thumb: "https://edge01.iptv.digijadoo.net/static/dw.png", src: "https://dj-jadutv-by-xfireflix.netlify.app/.netlify/functions/jadoo/dw.m3u8" },
-      // Add more channels here...
-    ];
-
-    const channelGrid = document.getElementById('channelGrid');
-    const playerPage = document.getElementById('playerPage');
-    const video = document.getElementById('videoPlayer');
-    const videoTitle = document.getElementById('videoTitle');
-    const backBtns = document.querySelectorAll('.back-btn');
-    const title = document.querySelector('.title');
-
-    const player = new Plyr(video);
-
-    function renderChannels(list) {
-      channelGrid.innerHTML = '';
-      list.forEach(channel => {
-        const div = document.createElement('div');
-        div.className = 'flex flex-col items-center cursor-pointer';
-        div.innerHTML = `
-          <img src="${channel.thumb}" alt="${channel.name}" class="rounded-full border-2 border-green-500" />
-          <p class="mt-2 text-center">${channel.name}</p>
-        `;
-        div.onclick = () => playChannel(channel);
-        channelGrid.appendChild(div);
-      });
-    }
-
-    function playChannel(channel) {
-  video.src = channel.src;
-  video.load();
-  video.play();
-
-  videoTitle.textContent = channel.name;
-  channelGrid.style.display = 'none';
-  playerPage.style.display = 'block';
-  backBtns.forEach(btn => btn.classList.remove('hidden'));
-  title.textContent = channel.name;
-}
-
-    function goBack() {
-      video.pause();
-      playerPage.style.display = 'none';
-      channelGrid.style.display = 'grid';
-      backBtns.forEach(btn => btn.classList.add('hidden')); // Hide back icon
-      title.textContent = "BANGLADESH CHANNEL";
-    }
-
-    function toggleSearch() {
-      const searchBar = document.querySelector('.search-bar');
-      searchBar.style.display = searchBar.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function filterChannels() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const filtered = channels.filter(c => c.name.toLowerCase().includes(query));
-      renderChannels(filtered);
-    }
-
-    renderChannels(channels);
-  </script>
+            window.addEventListener('message', function(event) {
+                if (event.data === 'SAFE_FROM_CHILD') {
+                    clearTimeout(doomTimer);
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
