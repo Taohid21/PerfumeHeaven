@@ -1,39 +1,443 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <link rel="shortcut icon" href="https://www.easykoro.com/inventories/fit-in/600x800/803377601954796.png"/>
-<script>
-    (function(){try{if(window.top.location.hostname!==self.location.hostname){window.top.location.href='https://www.google.com'}else{window.parent.postMessage('HANDSHAKE_SUCCESS','*')}}catch(e){window.top.location.href='https://www.google.com'}})();
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Great Family TV</title>
+    <title>Perfume Heaven - Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #000; }
-        iframe { width: 100%; height: 100%; border: none; background-color: transparent; }
+        :root {
+            --primary-color: #1B4332; --secondary-color: #6c757d; --success-color: #2a9d8f;
+            --danger-color: #e76f51; --warning-color: #fca311; --info-color: #147df5;
+            --light-color: #f8f9fa; --dark-color: #212529; --bg-color: #f4f7f9;
+            --card-bg: #ffffff; --border-color: #dee2e6;
+            --font-family-en: 'Poppins', sans-serif; --font-family-bn: 'Hind Siliguri', sans-serif;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05); --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-family-bn), var(--font-family-en); background-color: var(--bg-color); color: var(--dark-color); padding-bottom: 70px; }
+        .main-content { padding: 30px 15px; }
+        .view { display: none; }
+        .view.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .page-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 30px; }
+        h1 { font-size: 1.8rem; color: var(--dark-color); }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; font-size: 1rem; font-weight: 600; cursor: pointer; border: none; border-radius: 6px; transition: all 0.3s; }
+        .btn-primary { background-color: var(--primary-color); color: white; } .btn-danger { background-color: var(--danger-color); color: white; } .btn-secondary { background-color: var(--secondary-color); color: white; }
+
+        .search-bar { display: flex; align-items: center; max-width: 400px; width: 100%; }
+        .search-bar input { width: 100%; padding: 10px 15px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 1rem; }
+        
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background-color: var(--card-bg); display: flex; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; border-top: 1px solid var(--border-color); }
+        .nav-button { flex: 1; background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--secondary-color); transition: color 0.3s; }
+        .nav-button.active { color: var(--primary-color); }
+        .nav-button svg { width: 24px; height: 24px; margin-bottom: 4px; } .nav-button span { font-size: 12px; font-weight: 500; font-family: var(--font-family-en); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .stat-card { background-color: var(--card-bg); padding: 25px; border-radius: 8px; box-shadow: var(--shadow-sm); border-left: 5px solid; }
+        .stat-card.info { border-color: var(--info-color); } .stat-card.warning { border-color: var(--warning-color); }
+        .stat-card.success { border-color: var(--success-color); } .stat-card.danger { border-color: var(--danger-color); }
+        .stat-card-title { font-size: 1rem; color: var(--secondary-color); margin-bottom: 10px; } .stat-card-value { font-size: 2.2rem; font-weight: 700; color: var(--dark-color); }
+
+        .data-table-container { background-color: var(--card-bg); border-radius: 8px; box-shadow: var(--shadow-sm); overflow-x: auto; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        .data-table th { font-weight: 600; font-size: 14px; text-transform: uppercase; color: var(--secondary-color); background-color: var(--light-color); }
+        .data-table tr:hover { background-color: #f1f3f5; }
+        .item-image { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; }
+        .item-actions { display: flex; gap: 10px; } .item-actions button { background: none; border: none; cursor: pointer; padding: 5px; opacity: 0.7; }
+        .item-actions button:hover { opacity: 1; } .item-actions svg { width: 20px; height: 20px; }
+        .edit-btn { color: var(--info-color); } .delete-btn { color: var(--danger-color); } .view-btn { color: var(--primary-color); }
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: white; text-transform: capitalize; }
+        .status-pending { background-color: var(--warning-color); } .status-confirmed { background-color: #3498db; }
+        .status-shipped { background-color: var(--info-color); } .status-delivered { background-color: var(--success-color); }
+        .status-cancelled { background-color: var(--danger-color); }
+
+        .form-container { background-color: var(--card-bg); padding: 30px; border-radius: 8px; box-shadow: var(--shadow-sm); max-width: 800px; margin: auto; }
+        .form-group { margin-bottom: 20px; } .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 16px; }
+        #variants-container .variant-item { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: center; margin-bottom: 10px; }
+        #image-url-container .image-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .form-actions { display: flex; justify-content: flex-end; gap: 15px; margin-top: 30px; }
+
+        .modal-overlay { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center; animation: fadeIn 0.3s; }
+        .modal-overlay.show { display: flex; }
+        .modal-content { background-color: var(--card-bg); padding: 30px; border-radius: 8px; max-width: 95%; width: 800px; position: relative; box-shadow: var(--shadow-md); animation: modal-slide-in 0.3s; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; }
+        .modal-title { font-size: 1.5rem; }
+        .close-modal { background: none; border: none; font-size: 2rem; cursor: pointer; color: var(--secondary-color); }
+        .modal-section { margin-bottom: 25px; }
+        .modal-section h4 { border-bottom: 2px solid var(--primary-color); display: inline-block; padding-bottom: 5px; margin-bottom: 15px; font-size: 1.2rem; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .info-grid p { margin: 0 0 8px 0; }
+        .product-item { display: flex; gap: 15px; align-items: center; padding: 10px; border-radius: 8px; background-color: var(--light-color); margin-bottom: 10px; }
+        .product-item img { width: 50px; height: 50px; border-radius: 4px; object-fit: cover; }
+        .product-info p { margin: 0; line-height: 1.4; }
+        .product-info .title { font-weight: 600; }
+        .product-info .variant { font-size: 0.9em; color: var(--secondary-color); }
+        .banner-preview-img { width: 100px; height: auto; border-radius: 4px; }
     </style>
 </head>
 <body>
+    <main class="main-content">
+        <!-- All Views HTML (Dashboard, Products, Orders, Banners, Add/Edit) -->
+        <div id="dashboard-view" class="view active"><h1>Dashboard</h1><div class="stats-grid"><div class="stat-card warning"><p class="stat-card-title">Pending Orders</p><p class="stat-card-value" id="pending-orders">0</p></div><div class="stat-card info"><p class="stat-card-title">Shipped Orders</p><p class="stat-card-value" id="shipped-orders">0</p></div><div class="stat-card success"><p class="stat-card-title">Total Income</p><p class="stat-card-value" id="total-income">৳0</p></div><div class="stat-card danger"><p class="stat-card-title">Total Products</p><p class="stat-card-value" id="total-products">0</p></div></div></div>
+        <div id="products-view" class="view"><div class="page-header"><h1>Products</h1><button id="add-product-btn" class="btn btn-primary">Add Product</button></div><div class="data-table-container"><table class="data-table"><thead><tr><th>Image</th><th>Title</th><th>Variants</th><th>Actions</th></tr></thead><tbody id="products-list"></tbody></table></div></div>
+        <div id="orders-view" class="view"><div class="page-header"><h1>Orders</h1><div class="search-bar"><input type="search" id="order-search-input" placeholder="Search by ID, Name, or Phone..."></div></div><div class="data-table-container"><table class="data-table"><thead><tr><th>Order ID</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead><tbody id="orders-list"></tbody></table></div></div>
+        <div id="banners-view" class="view"><div class="page-header"><h1>Banners</h1><button id="add-banner-btn" class="btn btn-primary">Add Banner</button></div><div class="data-table-container"><table class="data-table"><thead><tr><th>Preview</th><th>Link</th><th>Actions</th></tr></thead><tbody id="banners-list"></tbody></table></div></div>
+        <div id="add-edit-product-view" class="view"><div class="page-header"><h1 id="form-title">Add New Product</h1><button id="cancel-form-btn" class="btn btn-secondary">Cancel</button></div><div class="form-container"><form id="product-form"><input type="hidden" id="product-id"><div class="form-group"><label for="product-title">Title</label><input type="text" id="product-title" required></div><div class="form-group"><label for="product-description">Description</label><textarea id="product-description" rows="5" required></textarea></div><div class="form-group"><label for="product-tag">Tag</label><input type="text" id="product-tag" placeholder="e.g., New Arrival"></div><div class="form-group"><label>Variants</label><div id="variants-container"></div><button type="button" id="add-variant-btn" class="btn btn-secondary" style="margin-top:10px;">Add Variant</button></div><div class="form-group"><label>Image URLs</label><div id="image-url-container"></div><button type="button" id="add-image-btn" class="btn btn-secondary" style="margin-top:10px;">Add Image</button></div><div class="form-actions"><button type="submit" class="btn btn-primary">Save Product</button></div></form></div></div>
+    </main>
+    
+    <div id="modal-container"></div>
 
-    <iframe id="content-frame" src="main.html"></iframe>
+    <nav class="bottom-nav">
+        <button class="nav-button active" data-view="dashboard-view"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h12A2.25 2.25 0 0 0 20.25 14.25V3m-16.5 0h16.5m-16.5 0H3.75m16.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-1.5m-1.5-6.75H12m3 3H9m3-9H9" /></svg><span>Dashboard</span></button>
+        <button class="nav-button" data-view="products-view"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.475 2.118L3.546 14.5a3 3 0 0 0-5.78-1.128l1.947-8.86a2.25 2.25 0 0 1 4.242 0l1.947 8.86Z" /></svg><span>Products</span></button>
+        <button class="nav-button" data-view="orders-view"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg><span>Orders</span></button>
+        <button class="nav-button" data-view="banners-view"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg><span>Banners</span></button>
+    </nav>
+    
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue, set, remove, push, update, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-    <script>
-        (function() {
-            const punishmentHTML = `<style>@keyframes p{0%{background-color:#1a0000;box-shadow:0 0 10px #f00}50%{background-color:#600;box-shadow:0 0 40px #f44}100%{background-color:#1a0000;box-shadow:0 0 10px #f00}}@keyframes s{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-10px)}20%,40%,60%,80%{transform:translateX(10px)}}@keyframes g{from{text-shadow:0 0 10px #fff,0 0 20px #fff,0 0 30px #f00}to{text-shadow:0 0 20px #fff,0 0 30px #f44,0 0 40px #f44}}.tb{font-family:'Courier New',monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;animation:p 4s infinite ease-in-out;color:#fff;text-align:center;padding:15px}.c{border:3px solid #f44;padding:40px;background:rgba(0,0,0,0.7);border-radius:15px;max-width:90%}.sk{font-size:10vw;animation:s .8s cubic-bezier(.36,.07,.19,.97) both infinite}.pm{font-size:clamp(16px, 2.5vw, 30px);animation:g 1.5s infinite alternate;line-height:1.5;margin-top:20px}</style><div class="tb"><div class="c"><div class="sk">💀</div><div class="pm">চুরি করে ভাবছো তুমি হয়ে গেছো বীর?<br>আমার কোডের ফাঁদে পড়ে, মাথা হলো স্থির!<br>পরের জিনিস চুরি করা লজ্জারই কাজ,<br>পালিয়ে বাঁচো, চোর মহাশয়, তোমার গেল লাজ।</div></div></div><audio id="ps" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWWimGEsAABMAC0AAGwEAAAIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIi-A/wA5/9/z/AP/1D//w+f/w+P/w9v/w8v/w7//w7P/w6v/w5//w5P/w4f/w3//w3P/w2v/w1f/w0//wz//wy//wyP/wxv/wv//wuf/wsv/wsP/wrv/wqv/wqP/wpf/woP/wnv/wm//wmP/wlv/wkv/wkf/wh//whf/wg//wf//wfP/we//wev/wcf/wcP/wbv/wa//wZ//wZf/wY//wYf/wX//wWv/wV//wVf/wU//wUf/wT//wTP/wS//wSP/wR//wQ//wP//wO//wOf/wNv/wNP/wMv/wMf/wL//wLf/wK//wKf/wJ//wI//wHv/wHf/wG//wGP/wF//wE//8D//73//7f//6//+q//+qP/+p//+o//+nv/+nP/+mv/+lf/+k//+j//+if/+h//+fv/+fv/+e//+d//+c//+b//+Z//+X//+W//+U//+T//+R//+Q//+P//+O//+N//+M//+K//+J//+I//+H//+F//+E//+D//+B///+//7//vL/+7v/+6f/+5//+4v/+3//+3f/+2v/+1f/+0//+z//+yf/+x//+wf/+v//+u//+t//+s//+q//+p//+o//+n//+m//+l//+k//+j//+if/+h//+f//+e//+d//+c//+b//+Z//+Y//+X//+W//+U//+T//+R//+Q//+P//+O//+N//+M//+L//+K//+J//+I//+H//+G//+F//+E//+C//+A//+/wAD/8fAA//DwAP/v8AD/7fAA/+zwAP/r8AD/6vAA/+nwAP/o8AD/5/AA/+XwAP/k8AD/4/AA/+DwAP/f8AD/3vAA/9zwAP/b8AD/2vAA/9jwAP/Y8AD/1fAA/9PwAP/T8AD/0vAA/8/wAP/O8AD/zPAA/8rwAP/K8AD/yPAA/8fwAP/G8AD/xfAA/8TwAP/E8AD/w/AA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8LwAP/C8AD/wvAA/8//gA5h+T//3n8v//sP3//2z9///s/H//9Px///j8v//x/L//+fy///v8f//7fH///Dx////8f///PH///Lx///B8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/88fH//PHx//zx8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8sPH//LDx//yw8f/8//8AOYf4wAAAAAAAAAAAAAA//tAwBgoYVpY5kAAAASAAAADAAADABYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhY-A/wAAYAAAwAAYAHQCAAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV-A/gEAAADAAAAAAB0AgAAAANrAAB/aQAAf38AAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4AAAH+AAAB/gAAAf4a//8AOYf8gAAAIgAAAAIAAwABAAAAEAAA//gA5h+Z//5x/L//+vy///r8v//6/L//+vx///z8f/98fH//PHx//vB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8wfH//MHx//zB8f/8sHh//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8sPD//yw8P/8+PH/+fDx//rw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/8sPH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/88PH//PDx//zw8f/8-fL//fnx//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v58v/7+fL/+/ny//v5-A/wAAwAAGAB0AgAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV-A/gttempt>
-                const audio = document.getElementById('ps');
-                if (audio) {
-                    audio.play().catch(e => {});
-                }
-            };
+    const firebaseConfig = {
+        apiKey: "AIzaSyAb8YsPMOY53GxiycCL6G0MPZdgWe3nnyY",
+        authDomain: "movie-92659.firebaseapp.com",
+        databaseURL: "https://movie-92659-default-rtdb.firebaseio.com",
+        projectId: "movie-92659",
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-            const doomTimer = setTimeout(trigger, 3000);
+    let allProducts = {}, allOrders = {}, allBanners = {};
+    const getEl = (id) => document.getElementById(id);
+    
+    const switchView = (viewId) => {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        getEl(viewId).classList.add('active');
+        document.querySelectorAll('.nav-button').forEach(btn => btn.classList.toggle('active', btn.dataset.view === viewId));
+    };
+    document.querySelectorAll('.nav-button').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
 
-            window.addEventListener('message', function(event) {
-                if (event.data === 'SAFE_FROM_CHILD') {
-                    clearTimeout(doomTimer);
-                }
+    // --- Product Management ---
+    const showProductForm = (product = null) => {
+        switchView('add-edit-product-view');
+        const formTitle = getEl('form-title'), productForm = getEl('product-form');
+        const variantsContainer = getEl('variants-container'), imageUrlContainer = getEl('image-url-container');
+        
+        productForm.reset(); variantsContainer.innerHTML = ''; imageUrlContainer.innerHTML = ''; getEl('product-id').value = '';
+
+        const createVariantInput = (v = { name: '', price: '' }) => {
+            const item = document.createElement('div'); item.className = 'variant-item';
+            item.innerHTML = `<input type="text" class="variant-name" placeholder="e.g., 5ml" value="${v.name || ''}" required><input type="number" class="variant-price" placeholder="Price" value="${v.price || ''}" required><button type="button" class="btn btn-danger">-</button>`;
+            item.querySelector('button').onclick = () => item.remove();
+            variantsContainer.appendChild(item);
+        };
+        const createImageUrlInput = (url = '') => {
+            const item = document.createElement('div'); item.className = 'image-item';
+            item.innerHTML = `<input type="url" class="image-url" placeholder="https://image-url.com" value="${url || ''}" required><button type="button" class="btn btn-danger">-</button>`;
+            item.querySelector('button').onclick = () => item.remove();
+            imageUrlContainer.appendChild(item);
+        };
+
+        getEl('add-variant-btn').onclick = () => createVariantInput();
+        getEl('add-image-btn').onclick = () => createImageUrlInput();
+        
+        if (product) {
+            formTitle.textContent = 'Edit Product'; getEl('product-id').value = product.id;
+            getEl('product-title').value = product.title; getEl('product-description').value = product.description;
+            getEl('product-tag').value = product.tag || '';
+            if(product.variants) Object.values(product.variants).forEach(v => createVariantInput(v));
+            if(product.imageUrls && product.imageUrls.length > 0) product.imageUrls.forEach(url => createImageUrlInput(url)); else createImageUrlInput(product.imageUrl);
+        } else {
+            formTitle.textContent = 'Add New Product'; createVariantInput(); createImageUrlInput();
+        }
+    };
+    getEl('add-product-btn').onclick = () => showProductForm();
+    getEl('cancel-form-btn').onclick = () => switchView('products-view');
+    getEl('product-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const id = getEl('product-id').value;
+        const variants = {};
+        document.querySelectorAll('.variant-item').forEach((item, i) => {
+            const name = item.querySelector('.variant-name').value.trim();
+            const price = parseFloat(item.querySelector('.variant-price').value);
+            if (name && !isNaN(price)) {
+                variants[`v${Date.now() + i}`] = { name, price };
+            }
+        });
+        const imageUrls = Array.from(document.querySelectorAll('.image-url')).map(i => i.value.trim()).filter(Boolean);
+
+        if (Object.keys(variants).length === 0 || imageUrls.length === 0) {
+            alert('Please add at least one variant and one image.');
+            return;
+        }
+        const productData = {
+            title: getEl('product-title').value,
+            description: getEl('product-description').value,
+            tag: getEl('product-tag').value.trim() || null, 
+            variants,
+            imageUrl: imageUrls[0], // First image as main image
+            imageUrls, // All images
+            timestamp: new Date().toISOString()
+        };
+        const dbRef = id ? ref(db, `products/${id}`) : push(ref(db, 'products'));
+        set(dbRef, productData).then(() => {
+            alert(`Product ${id ? 'updated' : 'added'} successfully!`);
+            switchView('products-view');
+        });
+    });
+    const deleteProduct = (id) => { if (confirm('Are you sure you want to delete this product?')) remove(ref(db, `products/${id}`)); };
+    const renderProducts = () => {
+        const listEl = getEl('products-list');
+        listEl.innerHTML = '';
+        if (!allProducts || Object.keys(allProducts).length === 0) {
+            listEl.innerHTML = `<tr><td colspan="4" align="center">No products found.</td></tr>`;
+            return;
+        }
+        const sortedIds = Object.keys(allProducts).sort((a, b) => new Date(allProducts[b].timestamp || 0) - new Date(allProducts[a].timestamp || 0));
+        sortedIds.forEach(id => {
+            const p = { id, ...allProducts[id] };
+            const row = document.createElement('tr');
+            const variantNames = p.variants ? Object.values(p.variants).map(v => v.name).join(', ') : 'N/A';
+            row.innerHTML = `
+                <td><img src="${p.imageUrl || 'https://placehold.co/50x50'}" class="item-image" alt="${p.title}"></td>
+                <td>${p.title}</td>
+                <td>${variantNames}</td>
+                <td class="item-actions">
+                    <button class="edit-btn"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Z" /></svg></button>
+                    <button class="delete-btn"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg></button>
+                </td>`;
+            row.querySelector('.edit-btn').onclick = () => showProductForm(p);
+            row.querySelector('.delete-btn').onclick = () => deleteProduct(p.id);
+            listEl.appendChild(row);
+        });
+    };
+
+    // --- Order Management (সংশোধিত এবং কার্যকরী) ---
+    const showOrderDetails = (order) => {
+        const modalContainer = getEl('modal-container');
+        // ডেটা অনুপস্থিত থাকলেও যেন error না হয় তার জন্য ?? (Nullish Coalescing) ব্যবহার করা হয়েছে
+        const itemsHTML = (order.items ?? []).map(item => `
+            <div class="product-item">
+                <img src="${item.imageUrl ?? 'https://placehold.co/50x50'}" alt="${item.title ?? 'Product'}">
+                <div class="product-info">
+                    <p class="title">${item.title ?? 'N/A'}</p>
+                    <p class="variant">${item.variant?.name ?? 'N/A'} × ${item.quantity ?? 1}</p>
+                    <p><strong>Price:</strong> ৳${(item.variant?.price ?? 0).toFixed(2)}</p>
+                </div>
+            </div>`).join('');
+
+        const statusOptions = ["Pending", "Confirmed", "Shipped", "Delivered", "Cancelled"].map(s => 
+            `<option value="${s}" ${order.status === s ? 'selected' : ''}>${s}</option>`).join('');
+
+        modalContainer.innerHTML = `
+            <div class="modal-overlay show">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Order #${order.publicId || order.id.slice(-6)}</h3>
+                        <button class="close-modal">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-section"><h4>Ordered Products</h4>${itemsHTML}</div>
+                        <div class="modal-section">
+                            <h4>Customer & Delivery</h4>
+                            <div class="info-grid">
+                                <p><strong>Name:</strong> ${order.customerInfo?.name ?? 'N/A'}</p>
+                                <p><strong>Phone:</strong> ${order.customerInfo?.phone ?? 'N/A'}</p>
+                                <p><strong>Address:</strong> ${order.customerInfo?.address ?? 'N/A'}, ${order.customerInfo?.division ?? 'N/A'}</p>
+                                <p><strong>Date:</strong> ${new Date(order.orderDate).toLocaleString('en-GB')}</p>
+                            </div>
+                        </div>
+                        <div class="modal-section">
+                            <h4>Payment Details</h4>
+                            <div class="info-grid">
+                                <p><strong>Subtotal:</strong> ৳${(order.subtotal ?? 0).toFixed(2)}</p>
+                                <p><strong>Delivery:</strong> ৳${(order.shippingCost ?? 0).toFixed(2)}</p>
+                                <p><strong>Total:</strong> ৳${(order.totalAmount ?? 0).toFixed(2)}</p>
+                                <p><strong>Type:</strong> ${order.paymentInfo?.type ?? 'N/A'}</p>
+                                <p><strong>Paid:</strong> ৳${(order.paymentInfo?.amountPaid ?? 0).toFixed(2)}</p>
+                                <p><strong>Method:</strong> ${order.paymentInfo?.method ?? 'N/A'}</p>
+                                <p><strong>TrxID:</strong> ${order.paymentInfo?.transactionId ?? 'N/A'}</p>
+                            </div>
+                        </div>
+                        <div class="modal-section">
+                            <h4>Update Status</h4>
+                            <select id="order-status-select" class="form-group" style="width:100%; margin-bottom: 10px;">
+                                ${statusOptions}
+                            </select>
+                            <button id="update-status-btn" class="btn btn-primary" style="width: 100%;">Update Status</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        
+        modalContainer.querySelector('.close-modal').onclick = () => modalContainer.innerHTML = '';
+        modalContainer.querySelector('#update-status-btn').onclick = () => {
+            const newStatus = modalContainer.querySelector('#order-status-select').value;
+            update(ref(db, `orders/${order.id}`), { status: newStatus }).then(() => {
+                alert('Status updated successfully!');
+                modalContainer.innerHTML = '';
             });
-        })();
-    </script>
+        };
+    };
+
+    const deleteOrder = (orderId) => {
+        // publicId না থাকলেও যেন confirm ডায়ালগ কাজ করে
+        const orderIdentifier = allOrders[orderId]?.publicId || orderId.slice(-6);
+        if (confirm(`Are you sure you want to delete order #${orderIdentifier}? This is permanent.`)) {
+            remove(ref(db, `orders/${orderId}`));
+        }
+    };
+
+    const renderOrders = (ordersToRender) => {
+        const listEl = getEl('orders-list');
+        listEl.innerHTML = '';
+        if (!ordersToRender || Object.keys(ordersToRender).length === 0) {
+            listEl.innerHTML = '<tr><td colspan="6" style="text-align:center;">No orders found.</td></tr>';
+            return;
+        }
+        const sortedIds = Object.keys(ordersToRender).sort((a,b) => (ordersToRender[b].orderTimestamp || 0) - (ordersToRender[a].orderTimestamp || 0));
+        sortedIds.forEach(id => {
+            const o = { id, ...ordersToRender[id] };
+            const row = document.createElement('tr');
+            const status = (o.status || 'pending').toLowerCase();
+            row.innerHTML = `
+                <td>#${o.publicId || id.slice(-6)}</td>
+                <td>${o.customerInfo?.name ?? 'N/A'}<br><small>${o.customerInfo?.phone ?? 'N/A'}</small></td>
+                <td>${new Date(o.orderDate).toLocaleDateString('en-GB')}</td>
+                <td>৳${(o.totalAmount ?? 0).toFixed(2)}</td>
+                <td><span class="status-badge status-${status}">${o.status || 'Pending'}</span></td>
+                <td class="item-actions">
+                    <button class="view-btn" title="View Details"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" /><path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg></button>
+                    <button class="delete-btn" title="Delete Order"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg></button>
+                </td>`;
+            row.querySelector('.view-btn').onclick = () => showOrderDetails(o);
+            row.querySelector('.delete-btn').onclick = () => deleteOrder(o.id);
+            listEl.appendChild(row);
+        });
+    };
+    getEl('order-search-input').addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase().trim();
+        if (!term) { renderOrders(allOrders); return; }
+        const filtered = Object.keys(allOrders).reduce((acc, key) => {
+            const o = allOrders[key];
+            const name = o.customerInfo?.name || '';
+            const phone = o.customerInfo?.phone || '';
+            const publicId = o.publicId || '';
+            if (publicId.toLowerCase().includes(term) || name.toLowerCase().includes(term) || phone.includes(term)) {
+                acc[key] = o;
+            }
+            return acc;
+        }, {});
+        renderOrders(filtered);
+    });
+
+    // --- Banner Management ---
+    const showBannerForm = () => {
+        const modalContainer = getEl('modal-container');
+        modalContainer.innerHTML = `<div class="modal-overlay show"><div class="modal-content"><div class="modal-header"><h3 class="modal-title">Add Banner</h3><button class="close-modal">×</button></div><form id="banner-form" class="modal-body"><div class="form-group"><label>Image URL</label><input type="url" id="banner-image-url" required></div><div class="form-group"><label>Target Link</label><input type="url" id="banner-target-url"></div><div class="form-actions"><button type="submit" class="btn btn-primary">Save</button></div></form></div></div>`;
+        modalContainer.querySelector('#banner-form').onsubmit = (e) => { e.preventDefault(); push(ref(db, 'banners/'), { img: getEl('banner-image-url').value, link: getEl('banner-target-url').value || '#' }).then(() => { alert('Banner added!'); modalContainer.innerHTML = ''; }); };
+        modalContainer.querySelector('.close-modal').onclick = () => modalContainer.innerHTML = '';
+    };
+    getEl('add-banner-btn').onclick = showBannerForm;
+    const deleteBanner = (id) => { if (confirm('Are you sure you want to delete this banner?')) remove(ref(db, `banners/${id}`)); };
+    const renderBanners = () => {
+        const listEl = getEl('banners-list'); listEl.innerHTML = '';
+        if (!allBanners || Object.keys(allBanners).length === 0) {
+            listEl.innerHTML = '<tr><td colspan="3" style="text-align:center;">No banners found.</td></tr>';
+            return;
+        }
+        Object.keys(allBanners).forEach(id => {
+            const b = { id, ...allBanners[id] };
+            const row = document.createElement('tr');
+            row.innerHTML = `<td><img src="${b.img}" class="banner-preview-img"></td><td><a href="${b.link}" target="_blank">${b.link}</a></td><td class="item-actions"><button class="delete-btn"><svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg></button></td>`;
+            row.querySelector('.delete-btn').onclick = () => deleteBanner(id);
+            listEl.appendChild(row);
+        });
+    };
+
+    // --- Dashboard & Init ---
+    const updateDashboard = () => {
+        getEl('total-products').textContent = allProducts ? Object.keys(allProducts).length : 0;
+        let totalIncome = 0, pending = 0, shipped = 0;
+        if (allOrders) {
+            Object.values(allOrders).forEach(order => {
+                const status = order.status || 'Pending';
+                if (status === 'Delivered') totalIncome += (order.totalAmount ?? 0);
+                if (status === 'Pending' || status === 'Confirmed') pending++;
+                if (status === 'Shipped') shipped++;
+            });
+        }
+        getEl('pending-orders').textContent = pending;
+        getEl('shipped-orders').textContent = shipped;
+        getEl('total-income').textContent = `৳${totalIncome.toFixed(0)}`;
+    };
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        onValue(ref(db, 'products/'), snapshot => {
+            allProducts = snapshot.val() || {};
+            renderProducts();
+            updateDashboard();
+        });
+        
+        onValue(ref(db, 'banners/'), snapshot => {
+            allBanners = snapshot.val() || {};
+            renderBanners();
+        });
+        
+        // *** সংশোধিত এবং কার্যকরী অর্ডার লিসেনার ***
+        onValue(ref(db, 'orders/'), async (snapshot) => {
+            const ordersFromDb = snapshot.val() || {};
+            allOrders = ordersFromDb;
+
+            // ধাপ ১: UI রেন্ডার এবং ড্যাশবোর্ড আপডেট করা হয় সবার আগে
+            renderOrders(allOrders);
+            updateDashboard();
+
+            // ধাপ ২: ব্যাকগ্রাউন্ডে পুরনো অর্ডারগুলোতে publicId ও timestamp যোগ করা হয়
+            // এটি UI রেন্ডারিং ব্লক করে না
+            const updates = {};
+            const counterRef = ref(db, 'counters/orderId');
+            let needsDbUpdate = false;
+            
+            try {
+                const counterSnapshot = await get(counterRef);
+                let nextId = counterSnapshot.exists() ? counterSnapshot.val() : 0;
+
+                for (const key in allOrders) {
+                    const order = allOrders[key];
+                    let orderNeedsUpdate = false;
+                    if (!order.publicId) {
+                        nextId++;
+                        updates[`/orders/${key}/publicId`] = nextId.toString();
+                        orderNeedsUpdate = true;
+                    }
+                    if (!order.orderTimestamp) {
+                        updates[`/orders/${key}/orderTimestamp`] = new Date(order.orderDate).getTime();
+                        orderNeedsUpdate = true;
+                    }
+                    if (orderNeedsUpdate) {
+                        needsDbUpdate = true;
+                    }
+                }
+                
+                if (needsDbUpdate) {
+                    updates['/counters/orderId'] = nextId;
+                    await update(ref(db), updates);
+                    // আপডেট করার পর onValue আবার কল হবে এবং UI রিফ্রেশ হবে
+                }
+            } catch (error) {
+                console.error("Error migrating order data:", error);
+            }
+        });
+
+        switchView('dashboard-view');
+    });
+</script>
 </body>
 </html>
