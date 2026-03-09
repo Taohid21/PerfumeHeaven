@@ -7,21 +7,21 @@
     <title>Perfume Heaven Shop - Premium Attar & Perfumes</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #1B4332; /* Deep, elegant green */
             --secondary-color: #2d3748; /* Dark gray for text */
             --accent-color: #FF7B00;  /* Vibrant orange for price/tags */
             --success-color: #2a9d8f;
-            --background-color: #FDFDFD;
+            --background-color: #F8F9FA; /* Slightly off-white for premium contrast */
             --card-bg: #ffffff;
-            --border-color: #f0f2f5;
+            --border-color: #eaeef2;
             --font-family-bn: 'Hind Siliguri', sans-serif;
             --font-family-en: 'Poppins', sans-serif;
-            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-            --shadow-lifted: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --border-radius-lg: 16px;
+            --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.03);
+            --shadow-lifted: 0 15px 35px rgba(0, 0, 0, 0.08);
+            --border-radius-lg: 20px;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,170 +32,292 @@
             color: var(--secondary-color); 
             line-height: 1.6;
             transition: background-color 0.3s;
+            padding-bottom: 0; /* Changed for bottom nav */
         }
 
-        /* --- নতুন আপডেট: পেজ লাফালাফি (Glitch) সমস্যার সমাধান --- */
-        body.modal-open { 
+        body.modal-open, body.drawer-open { 
             overflow: hidden; 
-            /* স্ক্রলবার সরে যাওয়ায় কন্টেন্ট যেন ডানে সরে না যায় তার জন্য এই প্যাডিং */
             padding-right: 15px; 
         }
-        body.drawer-open { overflow: hidden; }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
-        main.container { margin-bottom: 50px; }
+        main.container { margin-bottom: 80px; } /* Extra space for bottom nav */
 
         /* --- Header --- */
         .header {
-            background-color: var(--card-bg);
-            box-shadow: var(--shadow-subtle);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
             position: sticky; top: 0; z-index: 1000;
             display: grid; grid-template-columns: auto 1fr auto;
-            align-items: center; padding: 0 20px; height: 70px;
+            align-items: center; padding: 0 20px; height: 75px;
         }
         .header-left, .header-right { display: flex; align-items: center; gap: 20px; }
         .header-center { justify-self: center; }
         .header-icon {
             cursor: pointer; color: var(--secondary-color);
-            width: 28px; height: 28px; transition: color 0.3s ease;
+            width: 26px; height: 26px; transition: color 0.3s ease;
             position: relative;
         }
         .header-icon:hover { color: var(--primary-color); }
         .cart-count {
-            position: absolute; top: -5px; right: -8px;
+            position: absolute; top: -6px; right: -8px;
             background-color: var(--accent-color); color: white;
             border-radius: 50%; width: 20px; height: 20px;
-            font-size: 12px; font-weight: 700;
+            font-size: 11px; font-weight: 700;
             display: flex; align-items: center; justify-content: center;
             border: 2px solid var(--card-bg);
             transform: scale(0); transition: transform 0.2s ease-out;
         }
         .cart-count.visible { transform: scale(1); }
         .logo { display: flex; align-items: center; justify-content: center; }
-        .logo img { height: 84px; max-height: 100%; width: auto; }
+        .logo img { height: 60px; max-height: 100%; width: auto; transition: transform 0.3s ease; }
+        .logo:hover img { transform: scale(1.05); }
         
-        #menu-icon { width: 30px; height: 30px; }
-        #menu-icon .line {
-            fill: none; stroke: var(--secondary-color); stroke-width: 2.5; stroke-linecap: round;
-            transition: transform 0.4s ease-in-out, opacity 0.2s ease-in-out;
-        }
-        #menu-icon .line1, #menu-icon .line2, #menu-icon .line3 { transform-origin: center; }
-        body.drawer-open #menu-icon .line1 { transform: translateY(7px) rotate(45deg); }
+        #menu-icon { width: 30px; height: 30px; cursor: pointer; }
+        #menu-icon .line { fill: none; stroke: var(--secondary-color); stroke-width: 2.5; stroke-linecap: round; transition: transform 0.4s, opacity 0.2s; }
+        body.drawer-open #menu-icon .line1 { transform: translateY(7px) rotate(45deg); transform-origin: center;}
         body.drawer-open #menu-icon .line2 { opacity: 0; }
-        body.drawer-open #menu-icon .line3 { transform: translateY(-7px) rotate(-45deg); }
+        body.drawer-open #menu-icon .line3 { transform: translateY(-7px) rotate(-45deg); transform-origin: center;}
+
+        /* --- New: Bottom Navigation Bar (Mobile Only) --- */
+        .bottom-nav {
+            display: none;
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background-color: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
+            z-index: 1500;
+            padding: 12px 20px;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-bottom: calc(12px + env(safe-area-inset-bottom)); /* iPhone safe area */
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: #718096; text-decoration: none; font-size: 11px; font-weight: 500;
+            position: relative; transition: color 0.3s; cursor: pointer;
+        }
+        .nav-item.active, .nav-item:hover { color: var(--primary-color); }
+        .nav-item svg { width: 24px; height: 24px; stroke-width: 1.8; }
+        
+        @media (max-width: 768px) {
+            .bottom-nav { display: flex; }
+            body { padding-bottom: 70px; }
+            .header-right { display: none; } /* Hide top icons on mobile */
+        }
 
         /* --- Drawer Menu --- */
         #drawer-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); z-index: 1998;
-            opacity: 0; visibility: hidden;
-            transition: opacity 0.4s ease, visibility 0.4s;
+            background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); z-index: 1998;
+            opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s;
         }
         #drawer-menu {
-            position: fixed; top: 0; left: 0; width: 320px; max-width: 90%; height: 100%;
-            background-color: #111; color: #f0f0f0; z-index: 1999;
+            position: fixed; top: 0; left: 0; width: 300px; max-width: 85%; height: 100%;
+            background-color: #ffffff; color: var(--secondary-color); z-index: 1999;
             box-shadow: var(--shadow-lifted); transform: translateX(-100%);
-            transition: transform 0.4s cubic-bezier(0.6, 0.05, 0.4, 1);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             display: flex; flex-direction: column;
         }
         body.drawer-open #drawer-overlay { opacity: 1; visibility: visible; }
         body.drawer-open #drawer-menu { transform: translateX(0); }
-        .drawer-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 20px; height: 70px; border-bottom: 1px solid #333; flex-shrink: 0;
-        }
-        .drawer-header .logo img { height: 48px; }
-        .drawer-header .close-icon { width: 26px; height: 26px; cursor: pointer; color: #ccc; }
-        .drawer-header .close-icon:hover { color: white; }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 75px; border-bottom: 1px solid var(--border-color); }
+        .drawer-header .logo img { height: 40px; }
+        .drawer-header .close-icon { width: 26px; height: 26px; cursor: pointer; color: var(--secondary-color); }
         .drawer-nav { padding: 25px 15px; }
         .drawer-nav ul { list-style: none; }
         .drawer-nav a {
-            display: flex; align-items: center; gap: 18px; padding: 15px;
-            text-decoration: none; color: #e0e0e0; font-size: 1.1rem;
-            font-weight: 500; border-radius: 10px;
-            transition: background-color 0.2s, color 0.2s;
+            display: flex; align-items: center; gap: 15px; padding: 12px 15px; margin-bottom: 8px;
+            text-decoration: none; color: var(--secondary-color); font-size: 1.05rem; font-weight: 500;
+            border-radius: 12px; transition: background-color 0.2s, color 0.2s;
         }
-        .drawer-nav a:hover { background-color: #222; color: #ffffff; }
-        .drawer-nav a svg { width: 24px; height: 24px; stroke: #e0e0e0; transition: stroke 0.2s; }
-        .drawer-nav a:hover svg { stroke: #ffffff; }
+        .drawer-nav a:hover { background-color: rgba(27, 67, 50, 0.05); color: var(--primary-color); }
+        .drawer-nav a svg { width: 22px; height: 22px; stroke: currentColor; }
 
-        /* --- Fullscreen Modals (Search, Cart) --- */
+        /* --- Fullscreen Modals --- */
         .fullscreen-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--background-color); z-index: 2000;
-            transform: translateY(100%);
-            transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
             display: flex; flex-direction: column;
         }
         .fullscreen-modal.active { transform: translateY(0); }
-        .modal-header {
-            display: flex; align-items: center; padding: 0 20px; height: 70px;
-            border-bottom: 1px solid var(--border-color); background-color: var(--card-bg); flex-shrink: 0;
-        }
-        .modal-title { font-size: 1.4rem; font-weight: 600; flex-grow: 1; text-align: center; }
-        .close-modal-btn { cursor: pointer; color: var(--font-color); width: 28px; height: 28px; margin-left: auto; }
-        #search-overlay-input {
-            flex-grow: 1; border: none; outline: none; font-size: 1.1rem;
-            font-family: var(--font-family-bn); background: transparent; margin-left: 15px;
-        }
+        .modal-header { display: flex; align-items: center; padding: 0 20px; height: 75px; border-bottom: 1px solid var(--border-color); background-color: var(--card-bg); }
+        .modal-title { font-size: 1.3rem; font-weight: 600; flex-grow: 1; text-align: center; color: var(--primary-color); }
+        .close-modal-btn { cursor: pointer; color: var(--secondary-color); width: 28px; height: 28px; margin-left: auto; transition: color 0.3s; }
+        .close-modal-btn:hover { color: var(--accent-color); }
+        #search-overlay-input { flex-grow: 1; border: none; outline: none; font-size: 1.1rem; font-family: var(--font-family-en); background: transparent; margin-left: 15px; }
         .modal-content { flex-grow: 1; overflow-y: auto; padding: 25px 15px; }
 
         /* --- Shopping Cart Styles --- */
-        .cart-item {
-            display: flex; gap: 15px; align-items: center;
-            background-color: var(--card-bg); padding: 15px; border-radius: 12px;
-            margin-bottom: 15px; border: 1px solid var(--border-color);
-        }
-        .cart-item-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
+        .cart-item { display: flex; gap: 15px; align-items: center; background-color: var(--card-bg); padding: 15px; border-radius: 16px; margin-bottom: 15px; border: 1px solid var(--border-color); box-shadow: var(--shadow-subtle); }
+        .cart-item-img { width: 75px; height: 75px; object-fit: cover; border-radius: 10px; background: #f4f4f4; mix-blend-mode: multiply; }
         .cart-item-info { flex-grow: 1; }
-        .cart-item-title { font-weight: 600; margin-bottom: 5px; }
-        .cart-item-price { color: var(--accent-color); font-weight: 700; }
-        .cart-item-actions { display: flex; align-items: center; gap: 10px; }
-        .quantity-controls { display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: 50px; }
-        .quantity-btn { width: 30px; height: 30px; border: none; background: none; cursor: pointer; font-size: 1.2rem; }
-        .quantity-input { width: 40px; text-align: center; border: none; font-size: 1rem; -moz-appearance: textfield; }
-        .quantity-input::-webkit-outer-spin-button, .quantity-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        .remove-item-btn { background: none; border: none; cursor: pointer; color: #e74c3c; padding: 5px; }
-        .cart-footer {
-            flex-shrink: 0; /* ফুটারকে সংকুচিত হওয়া থেকে বিরত রাখে */
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
-        }
-        .cart-total { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; }
-        .checkout-btn {
-            width: 100%; padding: 15px; background-color: var(--primary-color);
-            color: white; border: none; border-radius: 12px; font-size: 1.1rem;
-            font-weight: 700; cursor: pointer;
-        }
-        .empty-cart-message { text-align: center; padding: 50px; }
-        
-        /* New, Improved Toast Notification */
-        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast {
-            display: flex; align-items: center; gap: 15px;
-            padding: 12px 20px; border-radius: 12px;
-            background-color: var(--card-bg);
-            color: var(--secondary-color);
-            box-shadow: var(--shadow-lifted);
-            opacity: 0; transform: translateX(120%);
-            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            border-left: 5px solid var(--success-color);
-        }
-        .toast.show { opacity: 1; transform: translateX(0); }
-        .toast-icon { width: 24px; height: 24px; color: var(--success-color); }
-        .toast-message { font-weight: 500; }
+        .cart-item-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 5px; color: var(--secondary-color); }
+        .cart-item-price { color: var(--primary-color); font-weight: 700; font-family: var(--font-family-en); }
+        .quantity-controls { display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: 8px; background: #fdfdfd; }
+        .quantity-btn { width: 32px; height: 32px; border: none; background: none; cursor: pointer; font-size: 1.2rem; color: var(--secondary-color); }
+        .quantity-input { width: 35px; text-align: center; border: none; background: transparent; font-size: 1rem; font-weight: 600; pointer-events: none;}
+        .remove-item-btn { background: rgba(231, 76, 60, 0.1); border: none; cursor: pointer; color: #e74c3c; padding: 8px; border-radius: 8px; transition: background 0.3s; }
+        .remove-item-btn:hover { background: #e74c3c; color: white; }
+        .cart-footer { flex-shrink: 0; background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 25px; border-top: 1px solid var(--border-color); box-shadow: 0 -10px 20px rgba(0,0,0,0.02); }
+        .cart-total { display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; color: var(--primary-color); }
+        .checkout-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary-color), #0f2c20); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 600; letter-spacing: 0.5px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 15px rgba(27, 67, 50, 0.3); }
+        .checkout-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27, 67, 50, 0.4); }
 
-        /* --- Other shared styles (slider, product cards, etc.) --- */
-        .hero-slider { margin: 25px auto; max-width: 1200px; padding: 0 15px; } .slider-container { position: relative; overflow: hidden; border-radius: var(--border-radius-lg); aspect-ratio: 16 / 9; background-color: #e0e0e0; } .slider-wrapper { display: flex; height: 100%; } .slide { flex-shrink: 0; width: 100%; height: 100%; } .slide img { width: 100%; height: 100%; object-fit: cover; } .section-header { text-align: center; margin: 50px 0 30px 0; } .section-header h2 { font-size: clamp(1.8rem, 5vw, 2.2rem); font-weight: 700; color: var(--primary-color); display: inline-block; position: relative; padding-bottom: 10px; } .section-header h2::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 70px; height: 4px; background: linear-gradient(90deg, var(--primary-color), var(--accent-color)); border-radius: 2px; } .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; } @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(3, 1fr); } } @media (min-width: 1024px) { .product-grid { grid-template-columns: repeat(4, 1fr); } } .product-card-wrapper { text-decoration: none; } .product-card { background-color: var(--card-bg); border-radius: var(--border-radius-lg); box-shadow: var(--shadow-subtle); overflow: hidden; color: inherit; display: flex; flex-direction: column; height: 100%; transition: transform 0.3s ease, box-shadow 0.3s ease; } .product-card-wrapper:hover .product-card { transform: translateY(-8px); box-shadow: var(--shadow-lifted); } .product-image-container { width: 100%; padding-top: 100%; position: relative; overflow: hidden; } .product-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.4s ease-in-out; } .product-image.hover-image { opacity: 0; } .product-card-wrapper:hover .product-image.hover-image { opacity: 1; } .new-badge { position: absolute; top: 12px; left: 12px; background-color: var(--primary-color); color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; z-index: 3; } .product-info { padding: 1rem; display: flex; flex-direction: column; flex-grow: 1; border-top: 1px solid var(--border-color); } .product-title { font-size: 1rem; font-weight: 600; color: var(--secondary-color); line-height: 1.4; margin-bottom: 0.5rem; height: 2.8em; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; } .product-footer { margin-top: auto; padding-top: 0.5rem; display: flex; justify-content: space-between; align-items: center; } .product-price { font-size: 1.2rem; font-weight: 700; color: var(--accent-color); font-family: var(--font-family-en); } .shopping-icon-link { display: inline-flex; padding: 8px; border-radius: 50%; background-color: transparent; transition: background-color 0.3s ease; z-index: 2; cursor: pointer;} .shopping-icon-link:hover { background-color: #f0f2f5; } .shopping-icon-link svg { width: 24px; height: 24px; stroke: var(--primary-color); stroke-width: 2; } @keyframes shimmer { 100% { transform: translateX(100%); } } .skeleton { background-color: #e2e8f0; position: relative; overflow: hidden; } .skeleton::after { position: absolute; top: 0; right: 0; bottom: 0; left: 0; transform: translateX(-100%); background-image: linear-gradient(90deg, rgba(255,255,255,0) 0, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0.5) 60%, rgba(255,255,255,0)); animation: shimmer 1.5s infinite; content: ''; } .skeleton-card { background-color: var(--card-bg); border-radius: var(--border-radius-lg); box-shadow: var(--shadow-subtle); overflow: hidden; } .skeleton-img { width: 100%; padding-top: 100%; } .skeleton-info { padding: 1rem; border-top: 1px solid var(--border-color); } .skeleton-text { height: 1em; border-radius: 4px; margin-bottom: 0.75rem; } .skeleton-text.long { width: 80%; } .skeleton-text.short { width: 60%; } .skeleton-price { height: 1.5em; width: 40%; border-radius: 4px; margin-top: 0.5rem; } .empty-message { grid-column: 1 / -1; text-align: center; padding: 50px 20px; font-size: 1.1rem; color: #6c757d; }
+        /* Toast Notification */
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { display: flex; align-items: center; gap: 15px; padding: 14px 22px; border-radius: 12px; background-color: var(--card-bg); color: var(--secondary-color); box-shadow: var(--shadow-lifted); opacity: 0; transform: translateX(120%); transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); border-left: 4px solid var(--primary-color); font-weight: 500; font-size: 0.95rem; }
+        .toast.show { opacity: 1; transform: translateX(0); }
+        .toast-icon { width: 22px; height: 22px; color: var(--primary-color); }
+
+        /* --- Section Headers --- */
+        .section-header { text-align: center; margin: 60px 0 40px 0; } 
+        .section-header h2 { font-size: clamp(1.8rem, 5vw, 2.2rem); font-weight: 700; color: #111; display: inline-block; position: relative; padding-bottom: 12px; font-family: var(--font-family-en); letter-spacing: -0.5px; } 
+        .section-header h2::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 40px; height: 3px; background: var(--primary-color); border-radius: 2px; }
+
+        /* --- NEW PREMIUM PRODUCT CARD DESIGN --- */
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; } 
+        @media (min-width: 768px) { .product-grid { grid-template-columns: repeat(3, 1fr); gap: 30px; } } 
+        @media (min-width: 1024px) { .product-grid { grid-template-columns: repeat(4, 1fr); } } 
+        
+        .product-card-wrapper { text-decoration: none; display: block; } 
+        
+        .product-card { 
+            background-color: var(--card-bg); 
+            border-radius: var(--border-radius-lg); 
+            border: 1px solid rgba(0,0,0,0.03);
+            box-shadow: var(--shadow-subtle); 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100%; 
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+        } 
+        
+        .product-card-wrapper:hover .product-card { 
+            transform: translateY(-8px); 
+            box-shadow: var(--shadow-lifted); 
+            border-color: rgba(27, 67, 50, 0.1);
+        } 
+        
+        .product-image-container { 
+            width: 100%; 
+            padding-top: 100%; /* 1:1 Aspect Ratio */
+            position: relative; 
+            overflow: hidden; 
+            background-color: #f8f9fa; /* Soft background for premium feel */
+        } 
+        
+        .product-image { 
+            position: absolute; 
+            top: 50%; left: 50%; 
+            transform: translate(-50%, -50%);
+            width: 85%; height: 85%; /* Leave padding inside */
+            object-fit: contain; 
+            mix-blend-mode: darken; /* Helps remove white background from bottle images */
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease; 
+        } 
+        
+        .product-image.hover-image { opacity: 0; } 
+        .product-card-wrapper:hover .product-image.main-image { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+        .product-card-wrapper:hover .product-image.hover-image { opacity: 1; transform: translate(-50%, -50%) scale(1.05); } 
+        
+        .new-badge { 
+            position: absolute; top: 15px; left: 15px; 
+            background-color: #111; color: white; 
+            padding: 5px 12px; border-radius: 4px; 
+            font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+            z-index: 3; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        } 
+        
+        .product-info { 
+            padding: 20px 15px; 
+            display: flex; flex-direction: column; flex-grow: 1; 
+            text-align: center; /* Centered looks more elegant for perfumes */
+            background: white;
+            position: relative;
+        } 
+        
+        .product-title { 
+            font-size: 1.05rem; font-weight: 500; color: #111; 
+            line-height: 1.4; margin-bottom: 8px; 
+            overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; 
+            font-family: var(--font-family-en);
+        } 
+        
+        .product-price { 
+            font-size: 1.2rem; font-weight: 700; color: var(--primary-color); 
+            font-family: var(--font-family-en); margin-top: auto;
+        } 
+        
+        /* Floating Add to Cart Button */
+        .shopping-icon-link { 
+            position: absolute;
+            bottom: -50px; /* Hidden below */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color); 
+            color: white;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+            z-index: 5; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(27, 67, 50, 0.3);
+            opacity: 0;
+            white-space: nowrap;
+        } 
+        
+        .shopping-icon-link svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; } 
+        
+        .product-card-wrapper:hover .shopping-icon-link {
+            bottom: 20px;
+            opacity: 1;
+        }
+        
+        /* Always show on mobile, but as a small icon */
+        @media (max-width: 768px) {
+            .product-info { padding-bottom: 15px; }
+            .shopping-icon-link {
+                opacity: 1; bottom: 15px; right: 15px; left: auto; transform: none;
+                padding: 8px; border-radius: 50%; background: #f4f6f8; color: var(--primary-color);
+                box-shadow: none;
+            }
+            .shopping-icon-link span { display: none; } /* Hide text on mobile */
+            .shopping-icon-link svg { width: 20px; height: 20px; }
+            .product-card-wrapper:hover .shopping-icon-link { bottom: 15px; background: var(--primary-color); color: white; }
+        }
+
+        /* Hero Slider adjustments */
+        .hero-slider { margin: 20px auto 40px auto; max-width: 1200px; padding: 0 15px; } 
+        .slider-container { border-radius: var(--border-radius-lg); overflow: hidden; box-shadow: var(--shadow-subtle); position: relative; aspect-ratio: 16/7; background: #e0e0e0; }
+        @media(max-width:768px){ .slider-container{ aspect-ratio: 16/9; } }
+        .slider-wrapper { display: flex; height: 100%; } 
+        .slide { flex-shrink: 0; width: 100%; height: 100%; } 
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Skeleton */
+        @keyframes shimmer { 100% { transform: translateX(100%); } } 
+        .skeleton { background-color: #f0f2f5; position: relative; overflow: hidden; } 
+        .skeleton::after { position: absolute; top: 0; right: 0; bottom: 0; left: 0; transform: translateX(-100%); background-image: linear-gradient(90deg, rgba(255,255,255,0) 0, rgba(255,255,255,0.4) 20%, rgba(255,255,255,0.8) 60%, rgba(255,255,255,0)); animation: shimmer 1.5s infinite; content: ''; } 
+        .skeleton-card { background-color: var(--card-bg); border-radius: var(--border-radius-lg); border: 1px solid var(--border-color); overflow: hidden; } 
+        .skeleton-img { width: 100%; padding-top: 100%; } 
+        .skeleton-info { padding: 20px; display: flex; flex-direction: column; align-items: center; } 
+        .skeleton-text { height: 12px; border-radius: 6px; margin-bottom: 10px; } 
+        .skeleton-text.long { width: 90%; } .skeleton-text.short { width: 60%; } 
+        .skeleton-price { height: 18px; width: 40%; border-radius: 6px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div id="toast-container"></div>
+    
     <!-- Drawer Menu -->
     <div id="drawer-overlay"></div>
     <nav id="drawer-menu">
@@ -208,17 +330,17 @@
 
     <header class="header">
         <div class="header-left">
-            <svg id="menu-icon" viewBox="0 0 24 24"><path class="line line1" d="M 3,6 H 21"/><path class="line line2" d="M 3,12 H 21"/><path class="line line3" d="M 3,18 H 21"/></svg>
+            <svg id="menu-icon" viewBox="0 0 24 24"><path class="line line1" d="M 4,7 H 20"/><path class="line line2" d="M 4,12 H 16"/><path class="line line3" d="M 4,17 H 20"/></svg>
         </div>
         <div class="header-center">
             <a href="index.html" class="logo"><img src="https://i.postimg.cc/cCKd21YV/FB-IMG-1751915283498-prev-ui.png" alt="Logo"></a>
         </div>
         <div class="header-right">
+            <svg id="search-icon" class="header-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
             <div id="cart-icon" class="header-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.812a1.125 1.125 0 00-1.087-1.418H4.625M7.5 14.25h11.218M15 15.75a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.076.721-.506 1.343-1.234 1.343H4.365c-.728 0-1.31-.622-1.234-1.343l1.263-12a1.125 1.125 0 011.125-1.007h12.962c.62 0 1.11.49 1.125 1.007z" /></svg>
                 <span id="cart-count" class="cart-count">0</span>
             </div>
-            <svg id="search-icon" class="header-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
         </div>
     </header>
 
@@ -228,7 +350,7 @@
 
     <main class="container">
         <section id="product-collection">
-            <div class="section-header"><h2>আতর / পারফিউম</h2></div>
+            <div class="section-header"><h2>Our Premium Collection</h2></div>
             <div class="product-grid" id="product-grid"></div>
         </section>
     </main>
@@ -237,7 +359,7 @@
     <div id="search-overlay" class="fullscreen-modal">
         <div class="modal-header">
             <svg id="close-search-btn" class="close-modal-btn" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
-            <input type="search" id="search-overlay-input" placeholder="আপনার পছন্দের পণ্য খুঁজুন..." autocomplete="off">
+            <input type="search" id="search-overlay-input" placeholder="Search for premium fragrances..." autocomplete="off">
         </div>
         <div class="modal-content"><div class="product-grid" id="search-results-grid"></div></div>
     </div>
@@ -245,14 +367,14 @@
     <!-- Cart Modal -->
     <div id="cart-overlay" class="fullscreen-modal">
         <div class="modal-header">
-            <div class="close-modal-btn" style="opacity:0;"></div> <!-- Spacer -->
-            <h2 class="modal-title">আপনার শপিং কার্ট</h2>
+            <div class="close-modal-btn" style="opacity:0; pointer-events:none;"></div>
+            <h2 class="modal-title">Shopping Bag</h2>
             <svg id="close-cart-btn" class="close-modal-btn" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
         </div>
         <div class="modal-content" id="cart-items-container"></div>
         <div id="cart-footer" class="cart-footer" style="display: none;">
             <div class="cart-total">
-                <span>মোট:</span>
+                <span>Total:</span>
                 <span id="cart-total-price">৳ 0</span>
             </div>
             <button id="checkout-btn" class="checkout-btn">Proceed to Checkout</button>
@@ -260,54 +382,75 @@
     </div>
 
     <!-- Footer Start -->
-    <footer style="background:#0d0d0d; color:#fff; padding:40px 20px; font-family:'Poppins', sans-serif;">
+    <footer style="background:#0a0a0a; color:#f0f0f0; padding:60px 20px 80px 20px; font-family:'Poppins', sans-serif;">
       <div style="max-width:1200px; margin:0 auto;">
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px;">
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px;">
           <div style="flex:1.5;">
-            <h3 style="font-size:18px; font-weight:600; margin-bottom:10px;">About Perfume Heaven</h3>
-            <img src="https://i.postimg.cc/cCKd21YV/FB-IMG-1751915283498-prev-ui.png" alt="Perfume Heaven Logo" style="height:90px; margin-bottom:15px;">
-            <p style="line-height:1.6; font-size:14px; color:#ccc;">
-              Hotline – <strong>01839579383</strong><br>
-              Patuakhali, Barishal<br>
-              <a href="mailto:perfumeheaven2023@gmail.com" style="color:#fff; text-decoration:none;">perfumeheaven2023@gmail.com</a>
+            <img src="https://i.postimg.cc/cCKd21YV/FB-IMG-1751915283498-prev-ui.png" alt="Perfume Heaven Logo" style="height:70px; margin-bottom:20px; filter: brightness(0) invert(1);">
+            <p style="line-height:1.8; font-size:14px; color:#a0a0a0;">
+              Experience the essence of luxury. Premium attars and authentic perfumes delivered to your doorstep.<br><br>
+              <strong>Hotline:</strong> 01839579383<br>
+              <strong>Email:</strong> perfumeheaven2023@gmail.com
             </p>
           </div>
           <div>
-            <h3 style="font-size:16px; font-weight:600; margin-bottom:10px;">Help Center</h3>
-            <ul style="list-style:none; padding:0; font-size:14px; line-height: 2;">
-              <li><a href="#" style="color:#ccc; text-decoration:none;">Contact Us</a></li>
-              <li><a href="#" style="color:#ccc; text-decoration:none;">Shipping Info</a></li>
-              <li><a href="#" style="color:#ccc; text-decoration:none;">Returns & Refunds</a></li>
+            <h3 style="font-size:16px; font-weight:600; margin-bottom:20px; color:#fff; text-transform:uppercase; letter-spacing:1px;">Help Center</h3>
+            <ul style="list-style:none; padding:0; font-size:14px; line-height: 2.2;">
+              <li><a href="#" style="color:#a0a0a0; text-decoration:none; transition: color 0.3s;">Contact Us</a></li>
+              <li><a href="#" style="color:#a0a0a0; text-decoration:none; transition: color 0.3s;">Shipping Info</a></li>
+              <li><a href="#" style="color:#a0a0a0; text-decoration:none; transition: color 0.3s;">Returns & Refunds</a></li>
             </ul>
           </div>
           <div>
-            <h3 style="font-size:16px; font-weight:600; margin-bottom:10px;">Useful Links</h3>
-            <ul style="list-style:none; padding:0; font-size:14px; line-height: 2;">
-              <li><a href="#" style="color:#ccc; text-decoration:none;">Terms of Service</a></li>
-              <li><a href="#" style="color:#ccc; text-decoration:none;">Privacy Policy</a></li>
-              <li><a href="orders.html" style="color:#ccc; text-decoration:none;">Track Order</a></li>
+            <h3 style="font-size:16px; font-weight:600; margin-bottom:20px; color:#fff; text-transform:uppercase; letter-spacing:1px;">Useful Links</h3>
+            <ul style="list-style:none; padding:0; font-size:14px; line-height: 2.2;">
+              <li><a href="#" style="color:#a0a0a0; text-decoration:none; transition: color 0.3s;">Terms of Service</a></li>
+              <li><a href="#" style="color:#a0a0a0; text-decoration:none; transition: color 0.3s;">Privacy Policy</a></li>
+              <li><a href="orders.html" style="color:#a0a0a0; text-decoration:none; transition: color 0.3s;">Track Order</a></li>
             </ul>
           </div>
-          <!-- নতুন আপডেট: সোশ্যাল লিংকস -->
           <div>
-            <h3 style="font-size:16px; font-weight:600; margin-bottom:15px;">Follow Us</h3>
+            <h3 style="font-size:16px; font-weight:600; margin-bottom:20px; color:#fff; text-transform:uppercase; letter-spacing:1px;">Follow Us</h3>
             <div style="display: flex; gap: 15px;">
-                <a href="https://www.facebook.com/share/19XvwkbpX3/" target="_blank" style="color: #fff; text-decoration: none; font-size: 24px; transition: color 0.3s;" onmouseover="this.style.color='#1877F2'" onmouseout="this.style.color='#fff'">
+                <a href="https://www.facebook.com/share/19XvwkbpX3/" target="_blank" style="color: #a0a0a0; text-decoration: none; font-size: 24px; transition: all 0.3s;" onmouseover="this.style.color='#fff'; this.style.transform='translateY(-3px)';" onmouseout="this.style.color='#a0a0a0'; this.style.transform='none';">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v2.385z"/></svg>
                 </a>
-                <a href="https://wa.me/message/U76TXXKZVJQWK1" target="_blank" style="color: #fff; text-decoration: none; font-size: 24px; transition: color 0.3s;" onmouseover="this.style.color='#25D366'" onmouseout="this.style.color='#fff'">
+                <a href="https://wa.me/message/U76TXXKZVJQWK1" target="_blank" style="color: #a0a0a0; text-decoration: none; font-size: 24px; transition: all 0.3s;" onmouseover="this.style.color='#fff'; this.style.transform='translateY(-3px)';" onmouseout="this.style.color='#a0a0a0'; this.style.transform='none';">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.487 5.235 3.487 8.413 0 6.557-5.338 11.892-11.894 11.892-1.99 0-3.903-.52-5.586-1.459l-6.554 1.654zm5.478-6.591c.831.52 1.76 1.008 2.765 1.008 5.457 0 9.898-4.442 9.898-9.899 0-5.456-4.441-9.898-9.898-9.898-5.457 0-9.899 4.441-9.899 9.898 0 2.021.59 3.927 1.646 5.594l.479.856-1.105 4.053 4.148-1.094.826.474z"/></svg>
                 </a>
             </div>
           </div>
         </div>
-        <hr style="border-color:#333; margin:30px 0;">
-        <p style="text-align:center; font-size:14px; color:#aaa;">
-          © 2025, Perfume Heaven | All Rights Reserved.
+        <hr style="border-color:#222; margin:40px 0 20px 0;">
+        <p style="text-align:center; font-size:13px; color:#777; font-weight: 500;">
+          © 2025 Perfume Heaven. All Rights Reserved.
         </p>
       </div>
     </footer>
     <!-- Footer End -->
+
+    <!-- NEW: Bottom Navigation Bar (Mobile) -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            Home
+        </a>
+        <div class="nav-item" id="bottom-search-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+            Search
+        </div>
+        <div class="nav-item" id="bottom-cart-btn">
+            <div style="position:relative;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.076.721-.506 1.343-1.234 1.343H4.365c-.728 0-1.31-.622-1.234-1.343l1.263-12a1.125 1.125 0 011.125-1.007h12.962c.62 0 1.11.49 1.125 1.007z"/></svg>
+                <span id="cart-count-bottom" class="cart-count" style="top:-8px; right:-10px;">0</span>
+            </div>
+            Cart
+        </div>
+        <a href="account.html" class="nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            Account
+        </a>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -329,9 +472,11 @@
         
         const mainProductGrid = document.getElementById('product-grid');
         const cartIcon = document.getElementById('cart-icon');
+        const bottomCartBtn = document.getElementById('bottom-cart-btn');
         const cartOverlay = document.getElementById('cart-overlay');
         const closeCartBtn = document.getElementById('close-cart-btn');
         const cartCountEl = document.getElementById('cart-count');
+        const cartCountBottomEl = document.getElementById('cart-count-bottom');
         
         // --- Drawer Menu ---
         const menuIcon = document.getElementById('menu-icon');
@@ -348,9 +493,9 @@
         onAuthStateChanged(auth, user => {
             const aboutLink = 'about.html'; 
             drawerNav.innerHTML = `
-                <li><a href="orders.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg> <span>Your Order</span></a></li>
-                <li><a href="account.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> <span>${user ? user.displayName || 'My Profile' : 'Account'}</span></a></li>
-                <li><a href="${aboutLink}" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <span>About</span></a></li>
+                <li><a href="orders.html"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg> <span>My Orders</span></a></li>
+                <li><a href="account.html"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> <span>${user ? user.displayName || 'My Profile' : 'Login / Register'}</span></a></li>
+                <li><a href="${aboutLink}"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> <span>About Us</span></a></li>
             `;
         });
         
@@ -358,6 +503,7 @@
         const openCart = () => { cartOverlay.classList.add('active'); document.body.classList.add('modal-open'); };
         const closeCart = () => { cartOverlay.classList.remove('active'); document.body.classList.remove('modal-open'); };
         cartIcon.addEventListener('click', openCart);
+        bottomCartBtn.addEventListener('click', openCart);
         closeCartBtn.addEventListener('click', closeCart);
 
         const saveCartToLocal = () => localStorage.setItem('shoppingCart', JSON.stringify(cart));
@@ -379,7 +525,7 @@
             }
             saveCartToLocal();
             updateCartUI();
-            showToast(`${product.title} কার্টে যোগ হয়েছে!`);
+            showToast(`${product.title} Added to Cart!`);
         };
 
         const updateCartItemQuantity = (productId, newQuantity) => {
@@ -406,11 +552,18 @@
             const footer = document.getElementById('cart-footer');
             const totalEl = document.getElementById('cart-total-price');
 
-            cartCountEl.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCountEl.classList.toggle('visible', cart.length > 0);
+            const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            // Update Top Icon
+            cartCountEl.textContent = totalQuantity;
+            cartCountEl.classList.toggle('visible', totalQuantity > 0);
+            
+            // Update Bottom Nav Icon
+            cartCountBottomEl.textContent = totalQuantity;
+            cartCountBottomEl.classList.toggle('visible', totalQuantity > 0);
 
             if (cart.length === 0) {
-                container.innerHTML = `<div class="empty-cart-message"><h3>আপনার কার্ট খালি</h3><p>পণ্য যোগ করুন।</p></div>`;
+                container.innerHTML = `<div style="text-align:center; padding: 60px 20px; color:#888;"><svg style="width:60px; height:60px; margin-bottom:15px; opacity:0.5;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg><h3>Your bag is empty</h3><p>Discover our premium collection.</p></div>`;
                 footer.style.display = 'none';
                 return;
             }
@@ -428,15 +581,15 @@
                         <div class="cart-item-title">${item.title}</div>
                         <div class="cart-item-price">৳ ${price}</div>
                     </div>
-                    <div class="cart-item-actions">
+                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
+                        <button class="remove-item-btn" data-id="${item.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+                        </button>
                         <div class="quantity-controls">
                             <button class="quantity-btn decrease-qty" data-id="${item.id}">-</button>
-                            <input type="number" class="quantity-input" value="${item.quantity}" min="1" data-id="${item.id}" readonly>
+                            <input type="number" class="quantity-input" value="${item.quantity}" readonly>
                             <button class="quantity-btn increase-qty" data-id="${item.id}">+</button>
                         </div>
-                        <button class="remove-item-btn" data-id="${item.id}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
-                        </button>
                     </div>
                 `;
                 container.appendChild(itemEl);
@@ -462,24 +615,18 @@
             }
         });
 
-        // --- নতুন আপডেট: চেকআউট বাটনের কার্যকারিতা ---
         document.getElementById('checkout-btn').addEventListener('click', () => {
-            if (cart.length > 0) {
-                // নতুন checkout.html পেজে যান
-                window.location.href = 'checkout.html';
-            } else {
-                showToast('আপনার কার্ট খালি।');
-            }
+            if (cart.length > 0) window.location.href = 'checkout.html';
+            else showToast('Your bag is empty.');
         });
 
-        // New Toast Notification
         const showToast = (message) => {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = 'toast';
             toast.innerHTML = `
                 <svg class="toast-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                <span class="toast-message">${message}</span>
+                <span>${message}</span>
             `;
             container.appendChild(toast);
             setTimeout(() => toast.classList.add('show'), 10);
@@ -489,7 +636,7 @@
             }, 3000);
         };
 
-        // Product Card Creation (with correct shopping icon)
+        // --- Premium Product Card ---
         const createProductCard = (product) => {
             const wrapper = document.createElement('a');
             wrapper.className = 'product-card-wrapper';
@@ -508,12 +655,12 @@
                     </div>
                     <div class="product-info">
                         <h3 class="product-title">${product.title}</h3>
-                        <div class="product-footer">
-                            <p class="product-price">${price}</p>
-                            <span class="shopping-icon-link">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-                            </span>
-                        </div>
+                        <p class="product-price">${price}</p>
+                        
+                        <span class="shopping-icon-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                            <span>Add to Cart</span>
+                        </span>
                     </div>
                 </div>
             `;
@@ -526,7 +673,6 @@
             return wrapper;
         };
 
-        // --- Skeleton Loader ---
         const createSkeletonCard = () => {
             const card = document.createElement('div'); card.className = 'skeleton-card';
             card.innerHTML = `<div class="skeleton skeleton-img"></div><div class="skeleton-info"><div class="skeleton-text long"></div><div class="skeleton-text short"></div><div class="skeleton-price"></div></div>`;
@@ -537,14 +683,13 @@
             for (let i = 0; i < count; i++) grid.appendChild(createSkeletonCard());
         };
 
-        // --- Fetch and Display Products ---
         const fetchAndDisplayProducts = () => {
             showSkeletonLoader(mainProductGrid);
             const productsRef = ref(db, 'products/');
             onValue(productsRef, (snapshot) => {
                 mainProductGrid.innerHTML = '';
                 const data = snapshot.val();
-                if (!data) { mainProductGrid.innerHTML = '<p class="empty-message">এই মুহূর্তে কোনো পণ্য পাওয়া যায়নি।</p>'; return; }
+                if (!data) { mainProductGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 50px; color:#888;">No products found.</p>'; return; }
                 const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
                 allProducts = Object.keys(data).map(key => ({
                     id: key, ...data[key],
@@ -557,19 +702,21 @@
         // --- Search Logic ---
         const searchOverlay = document.getElementById('search-overlay');
         const searchIcon = document.getElementById('search-icon');
+        const bottomSearchBtn = document.getElementById('bottom-search-btn');
         const closeSearchBtn = document.getElementById('close-search-btn');
         const searchInput = document.getElementById('search-overlay-input');
         const searchResultsGrid = document.getElementById('search-results-grid');
-        const openSearch = () => { searchOverlay.classList.add('active'); document.body.classList.add('modal-open'); searchInput.focus(); handleSearch(); };
+        const openSearch = () => { searchOverlay.classList.add('active'); document.body.classList.add('modal-open'); setTimeout(()=> searchInput.focus(), 100); handleSearch(); };
         const closeSearch = () => { searchOverlay.classList.remove('active'); document.body.classList.remove('modal-open'); searchInput.value = ''; };
         const handleSearch = () => {
             const searchTerm = searchInput.value.trim().toLowerCase();
             const filtered = searchTerm === '' ? allProducts : allProducts.filter(p => p.title.toLowerCase().includes(searchTerm));
             searchResultsGrid.innerHTML = '';
             if (filtered.length > 0) { filtered.forEach(p => searchResultsGrid.appendChild(createProductCard(p))); }
-            else { searchResultsGrid.innerHTML = '<p class="empty-message">No products found.</p>'; }
+            else { searchResultsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 50px; color:#888;">No products found.</p>'; }
         };
         searchIcon.addEventListener('click', openSearch);
+        bottomSearchBtn.addEventListener('click', openSearch);
         closeSearchBtn.addEventListener('click', closeSearch);
         searchInput.addEventListener('input', handleSearch);
 
