@@ -291,6 +291,11 @@
         </div>
     </header>
 
+    <!-- Dynamic Campaign Banner (Controlled from Admin) -->
+    <div id="dynamic-campaign-banner" style="display: none; padding: 10px 15px; text-align: center; font-weight: 600; color: #fff; font-size: 14px; z-index: 999; position: relative; letter-spacing: 0.5px;">
+        <span id="campaign-msg"></span>
+    </div>
+
     <div class="hero-slider">
         <div class="slider-container"><div class="slider-wrapper"></div></div>
     </div>
@@ -369,6 +374,34 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const auth = getAuth(app);
+
+        // --- Dynamic Theme & Campaign Controller ---
+        const themeSettingsRef = ref(db, 'theme_settings');
+        onValue(themeSettingsRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const settings = snapshot.val();
+                
+                // ১. কালার পরিবর্তন (CSS Variables আপডেট)
+                if (settings.primaryColor) {
+                    document.documentElement.style.setProperty('--primary-color', settings.primaryColor);
+                }
+                if (settings.accentColor) {
+                    document.documentElement.style.setProperty('--accent-color', settings.accentColor);
+                }
+
+                // ২. ঈদ/ক্যাম্পেইন অফার দেখানো বা লুকানো
+                const bannerDiv = document.getElementById('dynamic-campaign-banner');
+                const bannerMsg = document.getElementById('campaign-msg');
+                
+                if (settings.campaign && settings.campaign.isActive && settings.campaign.text.trim() !== "") {
+                    bannerDiv.style.display = "block";
+                    bannerDiv.style.backgroundColor = settings.campaign.bgColor || "#ff9800";
+                    bannerMsg.textContent = settings.campaign.text;
+                } else {
+                    bannerDiv.style.display = "none";
+                }
+            }
+        });
 
         let allProducts = [];
         let cart = [];
