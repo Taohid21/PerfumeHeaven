@@ -266,7 +266,7 @@
                     <div class="form-group"><label for="customer-name">সম্পূর্ণ নাম</label><input type="text" id="customer-name" required></div>
                     <div class="form-group"><label for="customer-phone">মোবাইল নম্বর</label><input type="tel" id="customer-phone" required placeholder="01xxxxxxxxx"></div>
                     <div class="form-group"><label for="customer-address">সম্পূর্ণ ঠিকানা</label><input type="text" id="customer-address" required placeholder="বাসা নং, রোড নং, এলাকা"></div>
-                    <div class="form-group"><label for="customer-division">বিভাগ</label><select id="customer-division" required><option value="">বিভাগ সিলেক্ট করুন</option></select></div>
+                    <div class="form-group"><label for="customer-district">জেলা</label><select id="customer-district" required><option value="">জেলা সিলেক্ট করুন</option></select></div>
                 </div>
                 <div class="form-step" id="step-2">
                     <h4>পেমেন্ট অপশন</h4>
@@ -336,8 +336,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getDatabase, ref, get, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-    // নতুন: Firebase Authentication থেকে প্রয়োজনীয় মডিউল ইম্পোর্ট করা হয়েছে
-    import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     // --- Firebase Config ---
     const firebaseConfig = {
@@ -345,27 +344,47 @@
         authDomain: "movie-92659.firebaseapp.com",
         databaseURL: "https://movie-92659-default-rtdb.firebaseio.com",
         projectId: "movie-92659",
-        storageBucket: "movie-92659.firebasestorage.app",
-        messagingSenderId: "1090734362509",
-        appId: "1:1090734362509:web:86be5583f6e8fcfdfa77c4",
     };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    // নতুন: Auth সার্ভিস ইনিশিয়ালাইজ করা হয়েছে
     const auth = getAuth(app);
 
-    // --- State, Constants & DOM Elements ---
+    // --- State & DOM Elements ---
     let currentProduct = null;
     let selectedVariant = null;
     let currentStep = 1;
     const TOTAL_STEPS = 3;
-    const DELIVERY_CHARGE = 110;
-    const BKASH_NUMBER = "01798796479";
-    const NAGAD_NUMBER = "01798796479";
-    const bdDivisions = ["ঢাকা", "চট্টগ্রাম", "খুলনা", "রাজশাহী", "বরিশাল", "সিলেট", "রংপুর", "ময়মনসিংহ"];
+    
+    // Admin Dynamic Data
+    let adminSettings = {
+        deliveryCharge: 110,
+        bkashNumber: "01798796479",
+        nagadNumber: "01798796479"
+    };
+    let productRules = {}; // Discounts and Free Shipping rules from Admin
+
     const orderModal = document.getElementById('order-modal');
     const reviewsModal = document.getElementById('reviews-modal');
     
+    // --- Load Admin Controls ---
+    onValue(ref(db, 'admin_controls'), (snapshot) => {
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            // Load Payment Settings
+            if (data.payment_settings) {
+                if(data.payment_settings.deliveryCharge) adminSettings.deliveryCharge = data.payment_settings.deliveryCharge;
+                if(data.payment_settings.bkash) adminSettings.bkashNumber = data.payment_settings.bkash;
+                if(data.payment_settings.nagad) adminSettings.nagadNumber = data.payment_settings.nagad;
+            }
+            // Load Product Rules
+            if (data.product_rules) {
+                productRules = data.product_rules;
+            }
+            // If product is already loaded on page, update its price based on new admin rules
+            if(currentProduct) updatePriceAndPayment(); 
+        }
+    });
+
     // --- Helper Functions ---
     const showToast = (message, type = 'success') => {
         const container = document.getElementById('toast-container');
@@ -379,6 +398,7 @@
             setTimeout(() => toast.remove(), 500);
         }, 3000);
     };
+
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text).then(() => showToast('নম্বর কপি হয়েছে!'), () => showToast('কপি করা যায়নি।', 'error'));
     };
@@ -387,32 +407,38 @@
     const loadProduct = async (productId) => {
         const loadingState = document.getElementById('loading-state');
         if (!productId) { loadingState.textContent = 'প্রোডাক্ট খুঁজে পাওয়া যায়নি।'; return; }
+        
         try {
             const snapshot = await get(ref(db, `products/${productId}`));
             if (snapshot.exists()) {
                 currentProduct = { id: snapshot.key, ...snapshot.val() };
-                displayProductDetails(currentProduct);
+                displayProductDetails();
                 fetchAndDisplayReviews(productId);
                 loadingState.style.display = 'none';
                 document.getElementById('product-content').style.display = 'block';
-            } else { loadingState.textContent = 'প্রোডাক্ট খুঁজে পাওয়া যায়নি।'; }
-        } catch (error) { loadingState.textContent = 'বিস্তারিত লোড করা যায়নি।'; console.error(error); }
+            } else { 
+                loadingState.textContent = 'প্রোডাক্ট খুঁজে পাওয়া যায়নি।'; 
+            }
+        } catch (error) { 
+            loadingState.textContent = 'বিস্তারিত লোড করা যায়নি।'; 
+            console.error(error); 
+        }
     };
     
-    const displayProductDetails = (product) => {
-        document.title = product.title;
-        document.getElementById('product-title').textContent = product.title;
-        document.getElementById('description-content').innerHTML = product.description.replace(/\n/g, '<br>');
+    const displayProductDetails = () => {
+        document.title = currentProduct.title;
+        document.getElementById('product-title').textContent = currentProduct.title;
+        document.getElementById('description-content').innerHTML = currentProduct.description.replace(/\n/g, '<br>');
 
-        const images = product.imageUrls && product.imageUrls.length > 0 ? product.imageUrls : [product.imageUrl];
+        const images = currentProduct.imageUrls && currentProduct.imageUrls.length > 0 ? currentProduct.imageUrls : [currentProduct.imageUrl];
         const mainImage = document.getElementById('main-product-image');
         const thumbnailContainer = document.getElementById('thumbnail-container');
+        
         mainImage.src = images[0] || 'https://via.placeholder.com/600';
         thumbnailContainer.innerHTML = '';
         images.forEach((imgUrl, index) => {
             const thumb = document.createElement('img');
-            thumb.src = imgUrl;
-            thumb.className = 'thumbnail';
+            thumb.src = imgUrl; thumb.className = 'thumbnail';
             if (index === 0) thumb.classList.add('active');
             thumb.onclick = () => {
                 mainImage.src = imgUrl;
@@ -425,9 +451,10 @@
         const variantContainer = document.getElementById('variant-options-container');
         const variantSelector = document.querySelector('.variant-selector');
         variantContainer.innerHTML = '';
-        if (product.variants && Object.keys(product.variants).length > 0) {
-            Object.keys(product.variants).forEach((key, index) => {
-                const variant = product.variants[key];
+        
+        if (currentProduct.variants && Object.keys(currentProduct.variants).length > 0) {
+            Object.keys(currentProduct.variants).forEach((key, index) => {
+                const variant = currentProduct.variants[key];
                 if(variant && variant.name && variant.price) {
                     const option = document.createElement('div');
                     option.className = 'variant-option';
@@ -444,34 +471,66 @@
         updatePriceAndPayment();
     };
 
+    // --- Advanced Pricing & Payment Calculation (Connected to Admin) ---
     const updatePriceAndPayment = () => {
         const selectedRadio = document.querySelector('input[name="productVariant"]:checked');
         
+        // 1. Get Base Price
+        let basePrice = 0;
         if (selectedRadio) {
             selectedVariant = currentProduct.variants[selectedRadio.value];
+            basePrice = Number(selectedVariant.price);
         } else if (currentProduct.price) {
             selectedVariant = { name: 'Standard', price: currentProduct.price };
+            basePrice = Number(currentProduct.price);
         } else {
             document.querySelector('.price-box').style.display = 'none';
             return;
         }
 
-        document.getElementById('product-price').textContent = `৳ ${selectedVariant.price}`;
+        // 2. Apply Admin Discounts & Free Shipping
+        let discountAmount = 0;
+        let isFreeShipping = false;
+
+        if (productRules[currentProduct.id]) {
+            const rule = productRules[currentProduct.id];
+            if (rule.percent) { discountAmount = basePrice * (rule.percent / 100); }
+            if (rule.free_shipping) { isFreeShipping = true; }
+        }
+
+        const finalItemPrice = Math.round(basePrice - discountAmount);
+        
+        // Display Price on main page
+        if(discountAmount > 0) {
+            document.getElementById('product-price').innerHTML = `৳ ${finalItemPrice} <span style="font-size:1.2rem; text-decoration:line-through; color:#999; margin-left:10px;">৳ ${basePrice}</span> <span style="font-size:1rem; background:var(--danger-color); color:white; padding:2px 8px; border-radius:12px; margin-left:5px;">-${productRules[currentProduct.id].percent}%</span>`;
+        } else {
+            document.getElementById('product-price').textContent = `৳ ${finalItemPrice}`;
+        }
+
         document.querySelector('.price-box').style.display = 'block';
 
+        // 3. Calculate Cart Totals
         const quantity = parseInt(document.getElementById('quantity').value) || 1;
-        const subtotal = selectedVariant.price * quantity;
-        const total = subtotal + DELIVERY_CHARGE;
-        document.getElementById('full-payment-amount-label').textContent = `(৳ ${total.toFixed(2)})`;
+        const subtotal = finalItemPrice * quantity;
+        const deliveryCost = isFreeShipping ? 0 : adminSettings.deliveryCharge;
+        const totalAmount = subtotal + deliveryCost;
+
+        // Update Payment UI
+        document.querySelector('label[for="paymentOption"] p strong') ? document.querySelector('label[for="paymentOption"] p strong').textContent = `৳ ${deliveryCost}` : null;
+        document.getElementById('full-payment-amount-label').textContent = `(৳ ${totalAmount})`;
         
         const paymentType = document.querySelector('input[name="paymentOption"]:checked').value;
-        const amountToPay = paymentType === 'full' ? total : DELIVERY_CHARGE;
+        const amountToPay = paymentType === 'full' ? totalAmount : deliveryCost;
         const activePaymentMethod = document.querySelector('.payment-method.active').dataset.method;
-        const number = activePaymentMethod === 'bKash' ? BKASH_NUMBER : NAGAD_NUMBER;
+        
+        // Determine number from admin settings
+        const paymentNumber = activePaymentMethod.toLowerCase() === 'bkash' ? adminSettings.bkashNumber : adminSettings.nagadNumber;
         
         const instructionsEl = document.getElementById('payment-instructions');
-        instructionsEl.innerHTML = `<p>এই ${activePaymentMethod} নম্বরে <strong>৳ ${amountToPay.toFixed(2)}</strong> সেন্ড মানি করুন:</p><div class="payment-number-wrapper"><strong id="payment-number">${number}</strong><button type="button" class="copy-btn">কপি</button></div>`;
-        instructionsEl.querySelector('.copy-btn').onclick = () => copyToClipboard(number);
+        instructionsEl.innerHTML = `<p>এই ${activePaymentMethod} নম্বরে <strong>৳ ${amountToPay}</strong> সেন্ড মানি করুন:</p><div class="payment-number-wrapper"><strong id="payment-number">${paymentNumber || 'Set number in admin'}</strong><button type="button" class="copy-btn">কপি</button></div>`;
+        
+        const copyBtn = instructionsEl.querySelector('.copy-btn');
+        if(copyBtn) copyBtn.onclick = () => copyToClipboard(paymentNumber);
     };
 
     // --- Reviews Logic ---
@@ -481,13 +540,16 @@
             const reviewSummaryDisplay = document.getElementById('review-summary-display');
             const reviewList = document.getElementById('review-list');
             reviewList.innerHTML = '';
+            
             if (!snapshot.exists()) {
                 reviewSummaryDisplay.innerHTML = '<p>এখনও কোনো রিভিউ নেই। আপনার মতামত দিন!</p>';
                 return;
             }
+            
             const reviews = snapshot.val();
             const reviewIds = Object.keys(reviews);
             let totalRating = 0;
+            
             reviewIds.reverse().forEach(id => {
                 const review = reviews[id];
                 totalRating += Number(review.rating);
@@ -496,17 +558,21 @@
                 card.innerHTML = `<div class="star-rating">${'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>'.repeat(review.rating)}</div><p class="review-author">${review.name}<span class="review-date">${new Date(review.timestamp).toLocaleDateString('bn-BD')}</span></p><p class="review-comment">${review.comment}</p>`;
                 reviewList.appendChild(card);
             });
+            
             const avgRating = (totalRating / reviewIds.length).toFixed(1);
             reviewSummaryDisplay.innerHTML = `<div class="average-rating-display"><span class="avg-score">${avgRating}</span><div><div class="star-rating">${'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>'.repeat(Math.round(avgRating))}</div><p class="total-reviews-text">${reviewIds.length} টি रिवিউ এর উপর ভিত্তি করে</p></div></div>`;
         });
     };
+
     const handleReviewSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
         const rating = form.rating.value;
         const name = form['reviewer-name'].value.trim();
         const comment = form['review-comment'].value.trim();
+        
         if (!rating || !name || !comment) { showToast('দয়া করে সব তথ্য পূরণ করুন।', 'error'); return; }
+        
         const reviewData = { name, rating, comment, timestamp: new Date().toISOString() };
         try {
             await push(ref(db, `reviews/${currentProduct.id}`), reviewData);
@@ -517,21 +583,24 @@
 
     // --- Modal Control Functions ---
     const openOrderModal = () => {
-        if (!selectedVariant) { showToast('দয়া করে প্রথমে সাইজ সিলেক্ট করুন।', 'error'); return; }
+        if (!selectedVariant && currentProduct.variants) { showToast('দয়া করে প্রথমে সাইজ সিলেক্ট করুন।', 'error'); return; }
         currentStep = 1; 
         showStep(currentStep);
         updatePriceAndPayment(); 
         orderModal.classList.add('show');
         document.body.classList.add('modal-open');
     };
+    
     const closeOrderModal = () => {
         orderModal.classList.remove('show');
         document.body.classList.remove('modal-open');
     };
+    
     const openReviewsModal = () => {
         reviewsModal.classList.add('show');
         document.body.classList.add('modal-open');
     };
+    
     const closeReviewsModal = () => {
         reviewsModal.classList.remove('show');
         document.body.classList.remove('modal-open');
@@ -548,20 +617,23 @@
         const progressPercentage = TOTAL_STEPS > 1 ? ((currentStep - 1) / (TOTAL_STEPS - 1)) * 80 : 0;
         document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
     };
+
     const showStep = (stepNumber) => {
         document.querySelectorAll('.form-step').forEach(step => step.classList.remove('active'));
         document.getElementById(`step-${stepNumber}`).classList.add('active');
         document.querySelector('.btn-prev').style.visibility = stepNumber === 1 ? 'hidden' : 'visible';
+        
         const nextBtn = document.querySelector('.btn-next');
         if (stepNumber === TOTAL_STEPS) {
             nextBtn.textContent = 'অর্ডার কনফার্ম করুন';
-            nextBtn.classList.add('btn-success'); nextBtn.classList.remove('btn-primary');
+            nextBtn.style.backgroundColor = 'var(--success-color)';
         } else {
             nextBtn.textContent = 'পরবর্তী ধাপ';
-            nextBtn.classList.remove('btn-success'); nextBtn.classList.add('btn-primary');
+            nextBtn.style.backgroundColor = 'var(--primary-color)';
         }
         updateStepIndicator();
     };
+
     const validateStep = (stepNumber) => {
         let isValid = true;
         document.querySelectorAll(`#step-${stepNumber} [required]`).forEach(input => {
@@ -571,24 +643,43 @@
         if (!isValid) showToast('দয়া করে প্রয়োজনীয় সব তথ্য দিন।', 'error');
         return isValid;
     };
+
     const populateReviewStep = () => {
+        // Recalculate everything for the final step based on Admin Rules
+        let basePrice = Number(selectedVariant.price);
+        let discountAmount = 0;
+        let isFreeShipping = false;
+
+        if (productRules[currentProduct.id]) {
+            const rule = productRules[currentProduct.id];
+            if (rule.percent) discountAmount = basePrice * (rule.percent / 100);
+            if (rule.free_shipping) isFreeShipping = true;
+        }
+
+        const finalItemPrice = Math.round(basePrice - discountAmount);
         const quantity = parseInt(document.getElementById('quantity').value) || 1;
-        const subtotal = selectedVariant.price * quantity;
-        const total = subtotal + DELIVERY_CHARGE;
+        const subtotal = finalItemPrice * quantity;
+        const deliveryCost = isFreeShipping ? 0 : adminSettings.deliveryCharge;
+        const totalAmount = subtotal + deliveryCost;
+        
         const paymentType = document.querySelector('input[name="paymentOption"]:checked').value;
-        const amountPaidNow = paymentType === 'full' ? total : DELIVERY_CHARGE;
+        const amountPaidNow = paymentType === 'full' ? totalAmount : deliveryCost;
+        
         document.getElementById('review-name').textContent = document.getElementById('customer-name').value;
         document.getElementById('review-phone').textContent = document.getElementById('customer-phone').value;
-        document.getElementById('review-address').textContent = `${document.getElementById('customer-address').value}, ${document.getElementById('customer-division').value}`;
+        document.getElementById('review-address').textContent = `${document.getElementById('customer-address').value}, ${document.getElementById('customer-district').value}`;
+        
         document.getElementById('review-product').textContent = `${currentProduct.title} (${selectedVariant.name}) x ${quantity}`;
-        document.getElementById('review-payment-type').textContent = paymentType === 'full' ? 'সম্পূর্ণ পেমেন্ট' : 'অ্যাডভান্স (ডেলিভারি চার্জ)';
-        document.getElementById('review-payment-method').textContent = `${document.querySelector('.payment-method.active').dataset.method} - ${document.getElementById('payer-number').value} (TrxID: ${document.getElementById('transaction-id').value})`;
-        document.getElementById('summary-subtotal').textContent = `৳ ${subtotal.toFixed(2)}`;
-        document.getElementById('summary-delivery').textContent = `৳ ${DELIVERY_CHARGE.toFixed(2)}`;
-        document.getElementById('summary-total').textContent = `৳ ${total.toFixed(2)}`;
-        document.getElementById('summary-paid-now').textContent = `৳ ${amountPaidNow.toFixed(2)}`;
+        document.getElementById('review-payment-type').textContent = paymentType === 'full' ? 'সম্পূর্ণ পেমেন্ট' : 'অ্যাডভান্স পেমেন্ট';
+        document.getElementById('review-payment-method').textContent = `${document.querySelector('.payment-method.active').dataset.method} (TrxID: ${document.getElementById('transaction-id').value})`;
+        
+        document.getElementById('summary-subtotal').textContent = `৳ ${subtotal}`;
+        document.getElementById('summary-delivery').textContent = deliveryCost === 0 ? 'ফ্রি ডেলিভারি' : `৳ ${deliveryCost}`;
+        document.getElementById('summary-total').textContent = `৳ ${totalAmount}`;
+        document.getElementById('summary-paid-now').textContent = `৳ ${amountPaidNow}`;
     };
     
+    // Globally accessible function for next/prev buttons
     window.nextPrev = (n) => {
         if (n > 0 && !validateStep(currentStep)) return;
         currentStep += n;
@@ -597,35 +688,65 @@
         showStep(currentStep);
     };
 
-    /**
-     * UPDATED: handleOrderSubmit
-     * This function now checks for a logged-in user and includes their UID with the order data.
-     * If no user is logged in, it saves `null` for the userId.
-     */
     const handleOrderSubmit = async () => {
         const confirmBtn = document.querySelector('.btn-next');
         confirmBtn.disabled = true; confirmBtn.textContent = 'প্রসেসিং...';
         
-        // Get the currently logged-in user
         const currentUser = auth.currentUser;
+        
+        let basePrice = Number(selectedVariant.price);
+        let discountAmount = 0;
+        let isFreeShipping = false;
 
+        if (productRules[currentProduct.id]) {
+            const rule = productRules[currentProduct.id];
+            if (rule.percent) discountAmount = basePrice * (rule.percent / 100);
+            if (rule.free_shipping) isFreeShipping = true;
+        }
+
+        const finalItemPrice = Math.round(basePrice - discountAmount);
         const quantity = parseInt(document.getElementById('quantity').value) || 1;
-        const subtotal = selectedVariant.price * quantity;
-        const totalAmount = subtotal + DELIVERY_CHARGE;
+        const subtotal = finalItemPrice * quantity;
+        const deliveryCost = isFreeShipping ? 0 : adminSettings.deliveryCharge;
+        const totalAmount = subtotal + deliveryCost;
+        
         const paymentType = document.querySelector('input[name="paymentOption"]:checked').value;
-        const amountPaid = paymentType === 'full' ? totalAmount : DELIVERY_CHARGE;
+        const amountPaid = paymentType === 'full' ? totalAmount : deliveryCost;
         
         const orderData = {
-            // New addition: Save the user's ID with the order
             userId: currentUser ? currentUser.uid : null, 
-            customerInfo: { name: document.getElementById('customer-name').value, phone: document.getElementById('customer-phone').value, address: document.getElementById('customer-address').value, division: document.getElementById('customer-division').value, },
-            items: [{ id: currentProduct.id, title: currentProduct.title, variant: selectedVariant, quantity: quantity, imageUrl: currentProduct.imageUrls[0] || currentProduct.imageUrl }],
-            paymentInfo: { type: paymentType, method: document.querySelector('.payment-method.active').dataset.method, transactionId: document.getElementById('transaction-id').value, payerNumber: document.getElementById('payer-number').value, amountPaid: amountPaid },
-            deliveryCharge: DELIVERY_CHARGE, subtotal: subtotal, totalAmount: totalAmount, status: 'Pending', orderDate: new Date().toISOString()
+            customerInfo: { 
+                name: document.getElementById('customer-name').value, 
+                phone: document.getElementById('customer-phone').value, 
+                address: document.getElementById('customer-address').value, 
+                district: document.getElementById('customer-district').value 
+            },
+            items: [{ 
+                id: currentProduct.id, 
+                title: currentProduct.title, 
+                variant: selectedVariant, 
+                quantity: quantity, 
+                imageUrl: currentProduct.imageUrls ? currentProduct.imageUrls[0] : currentProduct.imageUrl,
+                finalPrice: finalItemPrice
+            }],
+            paymentInfo: { 
+                type: paymentType, 
+                method: document.querySelector('.payment-method.active').dataset.method, 
+                transactionId: document.getElementById('transaction-id').value, 
+                payerNumber: document.getElementById('payer-number').value, 
+                amountPaid: amountPaid 
+            },
+            deliveryCharge: deliveryCost, 
+            subtotal: subtotal, 
+            totalAmount: totalAmount, 
+            status: 'Pending', 
+            orderDate: new Date().toISOString()
         };
+        
         try {
             await set(push(ref(db, 'orders')), orderData);
             document.getElementById('order-form-container').style.display = 'none';
+            document.querySelector('.form-navigation-btns').style.display = 'none';
             document.getElementById('order-success-message').style.display = 'block';
         } catch (error) {
             showToast('অর্ডার করা যায়নি। আবার চেষ্টা করুন।', 'error');
@@ -633,28 +754,28 @@
         }
     };
     
-    // --- Event Listeners ---
+    // --- Event Listeners Initialization ---
     document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
         loadProduct(urlParams.get('id'));
-        const divisionSelect = document.getElementById('customer-division');
-        bdDivisions.forEach(division => divisionSelect.innerHTML += `<option value="${division}">${division}</option>`);
+        
+        const districtSelect = document.getElementById('customer-district');
+        const bdDistricts = ["ঢাকা", "ফরিদপুর", "গাজীপুর", "গোপালগঞ্জ", "জামালপুর", "কিশোরগঞ্জ", "মাদারীপুর", "মানিকগঞ্জ", "মুন্সিগঞ্জ", "ময়মনসিংহ", "নারায়ণগঞ্জ", "নরসিংদী", "নেত্রকোনা", "রাজবাড়ী", "শরীয়তপুর", "শেরপুর", "টাঙ্গাইল", "বগুড়া", "জয়পুরহাট", "নওগাঁ", "নাটোর", "নবাবগঞ্জ", "পাবনা", "রাজশাহী", "সিরাজগঞ্জ", "দিনাজপুর", "গাইবান্ধা", "কুড়িগ্রাম", "লালমনিরহাট", "নীলফামারী", "পঞ্চগড়", "রংপুর", "ঠাকুরগাঁও", "বরগুনা", "বরিশাল", "ভোলা", "ঝালকাঠি", "পটুয়াখালী", "পিরোজপুর", "বান্দরবান", "ব্রাহ্মণবাড়িয়া", "চাঁদপুর", "চট্টগ্রাম", "কুমিল্লা", "কক্সবাজার", "ফেনী", "খাগড়াছড়ি", "লক্ষ্মীপুর", "নোয়াখালী", "রাঙ্গামাটি", "হবিগঞ্জ", "মৌলভীবাজার", "সুনামগঞ্জ", "সিলেট", "বাগেরহাট", "চুয়াডাঙ্গা", "যশোর", "ঝিনাইদহ", "খুলনা", "কুষ্টিয়া", "মাগুরা", "মেহেরপুর", "নড়াইল", "সাতক্ষীরা"];
+        bdDistricts.sort().forEach(district => districtSelect.innerHTML += `<option value="${district}">${district}</option>`);
     });
 
-    // Bottom Action Bar Listeners
     document.getElementById('buy-now-btn').onclick = openOrderModal;
     document.getElementById('reviews-btn').onclick = openReviewsModal;
-    
-    // Modal Close Listeners
     document.getElementById('close-order-modal').onclick = closeOrderModal;
     document.getElementById('close-reviews-modal').onclick = closeReviewsModal;
     
-    // Other Listeners
     document.getElementById('quantity-plus').onclick = () => { document.getElementById('quantity').stepUp(); updatePriceAndPayment(); };
     document.getElementById('quantity-minus').onclick = () => { document.getElementById('quantity').stepDown(); updatePriceAndPayment(); };
     document.getElementById('quantity').oninput = updatePriceAndPayment;
+    
     document.getElementById('review-form').addEventListener('submit', handleReviewSubmit);
-    document.getElementById('payment-option-selector').addEventListener('click', (e) => {
+    
+    document.querySelector('.payment-option-selector').addEventListener('click', (e) => {
         const targetOption = e.target.closest('.option');
         if (targetOption) {
             document.querySelectorAll('.payment-option-selector .option').forEach(opt => opt.classList.remove('active'));
@@ -663,6 +784,7 @@
             updatePriceAndPayment();
         }
     });
+    
     document.querySelectorAll('.payment-method').forEach(method => {
         method.addEventListener('click', () => {
             document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
